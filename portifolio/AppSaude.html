@@ -1,0 +1,1573 @@
+<!doctype html>
+<html lang="pt-BR" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saúde &amp; Bem-estar - Health Monitoring App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=Poppins:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@7.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@3.4.10/dist/vuetify.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/vue@3.3.11/dist/vue.global.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3.4.10/dist/vuetify.min.js"></script>
+    <script src="/_sdk/element_sdk.js"></script>
+    <script src="/_sdk/data_sdk.js"></script>
+    <style>
+        body { box-sizing: border-box; }
+
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .poppins {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html, body, #app {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .v-application {
+            height: 100%;
+        }
+
+        .main-gradient {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #0f7c6f 0%, #11998e 50%, #38ef7d 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(56, 239, 125, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(17, 153, 142, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-20px) translateX(20px); }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .metric-card-large {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card-large::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(17, 153, 142, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .metric-card-large:hover::before {
+            opacity: 1;
+        }
+
+        .metric-card-large:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(17, 153, 142, 0.2) !important;
+        }
+
+        .pulse-ring {
+            animation: pulseRing 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulseRing {
+            0% { box-shadow: 0 0 0 0 rgba(56, 239, 125, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(56, 239, 125, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(56, 239, 125, 0); }
+        }
+
+        .stat-mega {
+            font-size: 3.5rem;
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -2px;
+        }
+
+        .stat-large {
+            font-size: 2.5rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .icon-mega {
+            width: 80px;
+            height: 80px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .icon-large {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .green-gradient-1 {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .green-gradient-2 {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+        }
+
+        .green-gradient-3 {
+            background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+        }
+
+        .green-gradient-4 {
+            background: linear-gradient(135deg, #0f7c6f 0%, #11998e 100%);
+        }
+
+        .green-gradient-5 {
+            background: linear-gradient(135deg, #38ef7d 0%, #96e6a1 100%);
+        }
+
+        .green-gradient-6 {
+            background: linear-gradient(135deg, #41b883 0%, #86d993 100%);
+        }
+
+        .progress-circle {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-svg {
+            transform: rotate(-90deg);
+        }
+
+        .progress-track {
+            fill: none;
+            stroke: #e0e0e0;
+            stroke-width: 8;
+        }
+
+        .progress-bar {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease;
+        }
+
+        .activity-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .activity-card:hover {
+            border-left-color: #11998e;
+            background: rgba(17, 153, 142, 0.03);
+            transform: translateX(4px);
+        }
+
+        .mood-selector {
+            display: flex;
+            gap: 12px;
+            justify-content: space-between;
+        }
+
+        .mood-btn {
+            flex: 1;
+            min-height: 80px;
+            transition: all 0.3s ease;
+            border: 3px solid transparent !important;
+        }
+
+        .mood-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .mood-btn.active {
+            border-color: #11998e !important;
+            background: rgba(17, 153, 142, 0.1) !important;
+            transform: scale(1.05);
+        }
+
+        .floating-add-btn {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            z-index: 1000;
+            box-shadow: 0 8px 32px rgba(17, 153, 142, 0.4);
+        }
+
+        .floating-add-btn:hover {
+            box-shadow: 0 12px 48px rgba(17, 153, 142, 0.6);
+            transform: scale(1.1) rotate(90deg);
+        }
+
+        .chart-bar {
+            background: linear-gradient(to top, #11998e, #38ef7d);
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .chart-bar:hover {
+            background: linear-gradient(to top, #0f7c6f, #2ed86f);
+            transform: scaleY(1.05);
+        }
+
+        .weekly-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 180px;
+            gap: 8px;
+        }
+
+        .badge-success {
+            background: linear-gradient(135deg, #38ef7d, #11998e);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-warning {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-info {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .timeline-vertical {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline-vertical::before {
+            content: '';
+            position: absolute;
+            left: 16px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, #11998e, #38ef7d);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -31px;
+            top: 12px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #11998e;
+            z-index: 2;
+            box-shadow: 0 0 0 4px rgba(17, 153, 142, 0.2);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+        }
+
+        .stat-mini {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 16px;
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-mini:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .fade-enter-active, .fade-leave-active {
+            transition: opacity 0.3s ease;
+        }
+
+        .fade-enter-from, .fade-leave-to {
+            opacity: 0;
+        }
+
+        .v-tab {
+            text-transform: none !important;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .celebration {
+            animation: celebrate 0.6s ease-out;
+        }
+
+        @keyframes celebrate {
+            0% { transform: scale(0.8) rotate(-10deg); }
+            50% { transform: scale(1.2) rotate(10deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg,
+            rgba(255,255,255,0) 0%,
+            rgba(255,255,255,0.3) 50%,
+            rgba(255,255,255,0) 100%);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+    </style>
+    <style>@view-transition { navigation: auto; }</style>
+    <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+</head>
+<body class="h-full">
+<div id="app" class="h-full"></div>
+<script>
+    const { createApp } = Vue;
+    const { createVuetify } = Vuetify;
+
+    const vuetify = createVuetify({
+        theme: {
+            defaultTheme: 'light',
+            themes: {
+                light: {
+                    colors: {
+                        primary: '#11998e',
+                        secondary: '#38ef7d',
+                        accent: '#56ab2f',
+                        error: '#f5576c',
+                        info: '#00b09b',
+                        success: '#38ef7d',
+                        warning: '#fee140'
+                    }
+                }
+            }
+        }
+    });
+
+    const defaultConfig = {
+        app_title: 'Saúde & Bem-estar',
+        app_subtitle: 'Seu parceiro de saúde digital',
+        welcome_message: 'Olá! Como está sua saúde hoje?',
+        dashboard_title: 'Métricas de Hoje',
+        weekly_summary_title: 'Seu Progresso Semanal',
+        primary_color: '#11998e',
+        secondary_color: '#38ef7d',
+        background_color: '#f0f9f7',
+        card_color: '#ffffff',
+        text_color: '#1a4d42',
+        font_family: 'Poppins',
+        font_size: 16
+    };
+
+    const app = createApp({
+        data() {
+            return {
+                config: { ...defaultConfig },
+                healthData: [],
+                currentTab: 'dashboard',
+                isLoading: false,
+                showAddDialog: false,
+                snackbar: false,
+                snackbarText: '',
+
+                newEntry: {
+                    type: 'activity',
+                    date: new Date().toISOString().split('T')[0],
+                    time: new Date().toTimeString().split(' ')[0].substring(0, 5),
+                    steps: null,
+                    heart_rate: null,
+                    blood_pressure_sys: null,
+                    blood_pressure_dia: null,
+                    weight: null,
+                    sleep_hours: null,
+                    water_ml: null,
+                    calories: null,
+                    exercise_minutes: null,
+                    stress_level: 5,
+                    mood: null,
+                    notes: ''
+                },
+
+                moods: [
+                    { value: 'excellent', emoji: '😄', label: 'Excelente', color: '#38ef7d' },
+                    { value: 'good', emoji: '😊', label: 'Bom', color: '#56ab2f' },
+                    { value: 'okay', emoji: '😐', label: 'Ok', color: '#a8e063' },
+                    { value: 'bad', emoji: '😔', label: 'Ruim', color: '#f5576c' },
+                    { value: 'terrible', emoji: '😢', label: 'Péssimo', color: '#ff6b6b' }
+                ],
+
+                metricTypes: [
+                    { value: 'activity', icon: 'mdi-run-fast', label: 'Atividade Física', color: '#11998e' },
+                    { value: 'vitals', icon: 'mdi-heart-pulse', label: 'Sinais Vitais', color: '#f5576c' },
+                    { value: 'weight', icon: 'mdi-scale-bathroom', label: 'Peso Corporal', color: '#56ab2f' },
+                    { value: 'sleep', icon: 'mdi-power-sleep', label: 'Qualidade do Sono', color: '#764ba2' },
+                    { value: 'nutrition', icon: 'mdi-food-apple-outline', label: 'Nutrição & Hidratação', color: '#38ef7d' },
+                    { value: 'mood', icon: 'mdi-emoticon-happy-outline', label: 'Humor & Bem-estar', color: '#96e6a1' }
+                ]
+            };
+        },
+
+        computed: {
+            todayMetrics() {
+                const today = new Date().toISOString().split('T')[0];
+                const todayData = this.healthData.filter(d => d.date === today);
+
+                return {
+                    steps: this.sumMetric(todayData, 'steps'),
+                    heartRate: this.avgMetric(todayData, 'heart_rate'),
+                    water: this.sumMetric(todayData, 'water_ml'),
+                    calories: this.sumMetric(todayData, 'calories'),
+                    sleep: this.sumMetric(todayData, 'sleep_hours'),
+                    exercise: this.sumMetric(todayData, 'exercise_minutes'),
+                    weight: this.getLatestValue(todayData, 'weight'),
+                    mood: this.getLatestMood(todayData),
+                    stressLevel: this.avgMetric(todayData, 'stress_level')
+                };
+            },
+
+            weeklyStats() {
+                const weekAgo = new Date();
+                weekAgo.setDate(weekAgo.getDate() - 7);
+                const weekData = this.healthData.filter(d => new Date(d.date) >= weekAgo);
+
+                return {
+                    avgSteps: Math.round(this.avgMetric(weekData, 'steps')),
+                    avgHeartRate: Math.round(this.avgMetric(weekData, 'heart_rate')),
+                    totalCalories: this.sumMetric(weekData, 'calories'),
+                    avgSleep: this.avgMetric(weekData, 'sleep_hours').toFixed(1),
+                    totalExercise: this.sumMetric(weekData, 'exercise_minutes'),
+                    avgWater: Math.round(this.avgMetric(weekData, 'water_ml'))
+                };
+            },
+
+            weeklyChart() {
+                const days = [];
+                for (let i = 6; i >= 0; i--) {
+                    const date = new Date();
+                    date.setDate(date.getDate() - i);
+                    const dateStr = date.toISOString().split('T')[0];
+                    const dayData = this.healthData.filter(d => d.date === dateStr);
+                    days.push({
+                        date: dateStr,
+                        label: date.toLocaleDateString('pt-BR', { weekday: 'short' }),
+                        steps: this.sumMetric(dayData, 'steps'),
+                        maxSteps: 15000
+                    });
+                }
+                return days;
+            },
+
+            recentActivities() {
+                return [...this.healthData]
+                    .sort((a, b) => new Date(b.date + ' ' + b.time) - new Date(a.date + ' ' + a.time))
+                    .slice(0, 15);
+            },
+
+            stepsGoalProgress() {
+                const goal = 10000;
+                const current = this.todayMetrics.steps;
+                return Math.min(Math.round((current / goal) * 100), 100);
+            },
+
+            waterGoalProgress() {
+                const goal = 2000;
+                const current = this.todayMetrics.water;
+                return Math.min(Math.round((current / goal) * 100), 100);
+            },
+
+            caloriesGoalProgress() {
+                const goal = 2000;
+                const current = this.todayMetrics.calories;
+                return Math.min(Math.round((current / goal) * 100), 100);
+            },
+
+            exerciseGoalProgress() {
+                const goal = 60;
+                const current = this.todayMetrics.exercise;
+                return Math.min(Math.round((current / goal) * 100), 100);
+            },
+
+            healthScore() {
+                const scores = [];
+                if (this.todayMetrics.steps > 0) scores.push(Math.min(this.todayMetrics.steps / 100, 100));
+                if (this.todayMetrics.sleep > 0) scores.push(Math.min(this.todayMetrics.sleep / 8 * 100, 100));
+                if (this.todayMetrics.water > 0) scores.push(Math.min(this.todayMetrics.water / 20, 100));
+                if (this.todayMetrics.exercise > 0) scores.push(Math.min(this.todayMetrics.exercise / 0.6, 100));
+
+                if (scores.length === 0) return 0;
+                return Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+            }
+        },
+
+        methods: {
+            async initSDKs() {
+                if (window.elementSdk) {
+                    window.elementSdk.init({
+                        defaultConfig,
+                        onConfigChange: async (newConfig) => {
+                            this.config = { ...defaultConfig, ...newConfig };
+                            this.applyConfig();
+                        },
+                        mapToCapabilities: (cfg) => ({
+                            recolorables: [
+                                {
+                                    get: () => cfg.primary_color || defaultConfig.primary_color,
+                                    set: (v) => { cfg.primary_color = v; window.elementSdk.setConfig({ primary_color: v }); }
+                                },
+                                {
+                                    get: () => cfg.secondary_color || defaultConfig.secondary_color,
+                                    set: (v) => { cfg.secondary_color = v; window.elementSdk.setConfig({ secondary_color: v }); }
+                                },
+                                {
+                                    get: () => cfg.background_color || defaultConfig.background_color,
+                                    set: (v) => { cfg.background_color = v; window.elementSdk.setConfig({ background_color: v }); }
+                                },
+                                {
+                                    get: () => cfg.card_color || defaultConfig.card_color,
+                                    set: (v) => { cfg.card_color = v; window.elementSdk.setConfig({ card_color: v }); }
+                                },
+                                {
+                                    get: () => cfg.text_color || defaultConfig.text_color,
+                                    set: (v) => { cfg.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
+                                }
+                            ],
+                            borderables: [],
+                            fontEditable: {
+                                get: () => cfg.font_family || defaultConfig.font_family,
+                                set: (v) => { cfg.font_family = v; window.elementSdk.setConfig({ font_family: v }); }
+                            },
+                            fontSizeable: {
+                                get: () => cfg.font_size || defaultConfig.font_size,
+                                set: (v) => { cfg.font_size = v; window.elementSdk.setConfig({ font_size: v }); }
+                            }
+                        }),
+                        mapToEditPanelValues: (cfg) => new Map([
+                            ['app_title', cfg.app_title || defaultConfig.app_title],
+                            ['app_subtitle', cfg.app_subtitle || defaultConfig.app_subtitle],
+                            ['welcome_message', cfg.welcome_message || defaultConfig.welcome_message],
+                            ['dashboard_title', cfg.dashboard_title || defaultConfig.dashboard_title],
+                            ['weekly_summary_title', cfg.weekly_summary_title || defaultConfig.weekly_summary_title]
+                        ])
+                    });
+                }
+
+                if (window.dataSdk) {
+                    const result = await window.dataSdk.init({
+                        onDataChanged: (data) => {
+                            this.healthData = data;
+                        }
+                    });
+
+                    if (!result.isOk) {
+                        console.error('Failed to initialize Data SDK');
+                    }
+                }
+            },
+
+            applyConfig() {
+                const root = document.documentElement;
+                root.style.setProperty('--primary-color', this.config.primary_color || defaultConfig.primary_color);
+                root.style.setProperty('--secondary-color', this.config.secondary_color || defaultConfig.secondary_color);
+                root.style.setProperty('--background-color', this.config.background_color || defaultConfig.background_color);
+                root.style.setProperty('--card-color', this.config.card_color || defaultConfig.card_color);
+                root.style.setProperty('--text-color', this.config.text_color || defaultConfig.text_color);
+
+                const fontFamily = this.config.font_family || defaultConfig.font_family;
+                const fontSize = this.config.font_size || defaultConfig.font_size;
+                document.body.style.fontFamily = `${fontFamily}, Inter, -apple-system, sans-serif`;
+                document.body.style.fontSize = `${fontSize}px`;
+            },
+
+            sumMetric(data, field) {
+                return data.reduce((sum, item) => sum + (item[field] || 0), 0);
+            },
+
+            avgMetric(data, field) {
+                const filtered = data.filter(item => item[field] != null && item[field] > 0);
+                if (filtered.length === 0) return 0;
+                return this.sumMetric(filtered, field) / filtered.length;
+            },
+
+            getLatestValue(data, field) {
+                const filtered = data.filter(item => item[field] != null && item[field] > 0);
+                if (filtered.length === 0) return 0;
+                return filtered[filtered.length - 1][field];
+            },
+
+            getLatestMood(data) {
+                const moodEntries = data.filter(d => d.mood);
+                if (moodEntries.length === 0) return null;
+                return moodEntries[moodEntries.length - 1].mood;
+            },
+
+            getMoodEmoji(mood) {
+                const moodObj = this.moods.find(m => m.value === mood);
+                return moodObj ? moodObj.emoji : '😐';
+            },
+
+            getMoodColor(mood) {
+                const moodObj = this.moods.find(m => m.value === mood);
+                return moodObj ? moodObj.color : '#a8e063';
+            },
+
+            openAddDialog() {
+                this.resetNewEntry();
+                this.showAddDialog = true;
+            },
+
+            resetNewEntry() {
+                this.newEntry = {
+                    type: 'activity',
+                    date: new Date().toISOString().split('T')[0],
+                    time: new Date().toTimeString().split(' ')[0].substring(0, 5),
+                    steps: null,
+                    heart_rate: null,
+                    blood_pressure_sys: null,
+                    blood_pressure_dia: null,
+                    weight: null,
+                    sleep_hours: null,
+                    water_ml: null,
+                    calories: null,
+                    exercise_minutes: null,
+                    stress_level: 5,
+                    mood: null,
+                    notes: ''
+                };
+            },
+
+            async saveEntry() {
+                if (this.healthData.length >= 999) {
+                    this.showSnackbar('⚠️ Limite máximo de 999 registros atingido. Exclua alguns registros primeiro.');
+                    return;
+                }
+
+                this.isLoading = true;
+
+                const entry = {
+                    id: Date.now().toString(),
+                    type: this.newEntry.type,
+                    date: this.newEntry.date,
+                    time: this.newEntry.time,
+                    steps: this.newEntry.steps || 0,
+                    heart_rate: this.newEntry.heart_rate || 0,
+                    blood_pressure_sys: this.newEntry.blood_pressure_sys || 0,
+                    blood_pressure_dia: this.newEntry.blood_pressure_dia || 0,
+                    weight: this.newEntry.weight || 0,
+                    sleep_hours: this.newEntry.sleep_hours || 0,
+                    water_ml: this.newEntry.water_ml || 0,
+                    calories: this.newEntry.calories || 0,
+                    exercise_minutes: this.newEntry.exercise_minutes || 0,
+                    stress_level: this.newEntry.stress_level || 5,
+                    mood: this.newEntry.mood || '',
+                    notes: this.newEntry.notes || ''
+                };
+
+                const result = await window.dataSdk.create(entry);
+
+                this.isLoading = false;
+
+                if (result.isOk) {
+                    this.showAddDialog = false;
+                    this.showSnackbar('✅ Registro salvo com sucesso!');
+                } else {
+                    this.showSnackbar('❌ Erro ao salvar registro. Tente novamente.');
+                }
+            },
+
+            formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+            },
+
+            formatTime(timeString) {
+                return timeString.substring(0, 5);
+            },
+
+            getMetricIcon(type) {
+                const metric = this.metricTypes.find(m => m.value === type);
+                return metric ? metric.icon : 'mdi-chart-line';
+            },
+
+            getMetricColor(type) {
+                const metric = this.metricTypes.find(m => m.value === type);
+                return metric ? metric.color : '#11998e';
+            },
+
+            showSnackbar(text) {
+                this.snackbarText = text;
+                this.snackbar = true;
+            },
+
+            getCircleProgress(percentage, radius = 70) {
+                const circumference = 2 * Math.PI * radius;
+                const offset = circumference - (percentage / 100) * circumference;
+                return { circumference, offset };
+            }
+        },
+
+        async mounted() {
+            await this.initSDKs();
+            this.applyConfig();
+        },
+
+        template: `
+          <v-app :style="{ backgroundColor: config.background_color || defaultConfig.background_color, height: '100%' }">
+
+            <!-- Hero Header -->
+            <div class="hero-section" style="padding: 32px 24px 24px;">
+              <v-container fluid style="max-width: 1600px; position: relative; z-index: 10;">
+                <div class="d-flex align-center justify-space-between mb-4">
+                  <div class="d-flex align-center">
+                    <div class="icon-large green-gradient-5 pulse-ring mr-4">
+                      <v-icon size="40" color="white">mdi-heart-pulse</v-icon>
+                    </div>
+                    <div class="text-white">
+                      <div class="text-h4 font-weight-black poppins mb-1">{{ config.app_title || defaultConfig.app_title }}</div>
+                      <div class="text-body-1">{{ config.app_subtitle || defaultConfig.app_subtitle }}</div>
+                    </div>
+                  </div>
+                  <div class="d-flex align-center gap-2">
+                    <v-btn icon variant="text" color="white" size="large">
+                      <v-icon>mdi-bell-outline</v-icon>
+                    </v-btn>
+                    <v-btn icon variant="text" color="white" size="large">
+                      <v-icon>mdi-cog-outline</v-icon>
+                    </v-btn>
+                    <v-avatar color="white" size="48">
+                      <v-icon color="primary">mdi-account</v-icon>
+                    </v-avatar>
+                  </div>
+                </div>
+
+                <!-- Welcome Card -->
+                <v-card class="glass-card" rounded="xl" elevation="0">
+                  <v-card-text class="pa-6">
+                    <div class="d-flex align-center justify-space-between flex-wrap">
+                      <div>
+                        <div class="text-h4 font-weight-bold mb-2 poppins" :style="{ color: config.text_color || defaultConfig.text_color }">
+                          {{ config.welcome_message || defaultConfig.welcome_message }}
+                        </div>
+                        <div class="text-body-1" style="color: #666;">
+                          {{ new Date().toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) }}
+                        </div>
+                      </div>
+                      <div class="text-center">
+                        <div style="font-size: 4rem; line-height: 1;">{{ getMoodEmoji(todayMetrics.mood) }}</div>
+                        <div v-if="todayMetrics.mood" class="text-caption font-weight-bold mt-2" :style="{ color: getMoodColor(todayMetrics.mood) }">
+                          {{ moods.find(m => m.value === todayMetrics.mood)?.label }}
+                        </div>
+                      </div>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-container>
+            </div>
+
+            <v-main style="height: 100%;">
+              <v-container fluid class="pa-6" style="max-width: 1600px; height: 100%; overflow-y: auto;">
+
+                <!-- Tabs -->
+                <v-tabs v-model="currentTab" class="mb-6" :color="config.primary_color || defaultConfig.primary_color" height="56">
+                  <v-tab value="dashboard" class="text-h6">
+                    <v-icon start size="24">mdi-view-dashboard-variant</v-icon>
+                    Dashboard
+                  </v-tab>
+                  <v-tab value="analytics" class="text-h6">
+                    <v-icon start size="24">mdi-chart-box</v-icon>
+                    Análises
+                  </v-tab>
+                  <v-tab value="history" class="text-h6">
+                    <v-icon start size="24">mdi-history</v-icon>
+                    Histórico
+                  </v-tab>
+                </v-tabs>
+
+                <!-- Dashboard Tab -->
+                <div v-if="currentTab === 'dashboard'">
+
+                  <div class="text-h4 font-weight-bold mb-4 poppins" :style="{ color: config.text_color || defaultConfig.text_color }">
+                    {{ config.dashboard_title || defaultConfig.dashboard_title }}
+                  </div>
+
+                  <v-row>
+                    <!-- Main Steps Card -->
+                    <v-col cols="12" lg="8">
+                      <v-card class="metric-card-large" elevation="4" rounded="xl" :color="config.card_color || defaultConfig.card_color">
+                        <v-card-text class="pa-8">
+                          <div class="d-flex align-center justify-space-between mb-6">
+                            <div class="d-flex align-center">
+                              <div class="icon-mega green-gradient-1 shimmer mr-6">
+                                <v-icon size="48" color="white">mdi-walk</v-icon>
+                              </div>
+                              <div>
+                                <div class="text-overline text-grey mb-1">Passos de Hoje</div>
+                                <div class="stat-mega" :style="{ color: config.primary_color || defaultConfig.primary_color }">
+                                  {{ todayMetrics.steps.toLocaleString() }}
+                                </div>
+                                <div class="text-body-1 text-grey mt-1">Meta: 10.000 passos</div>
+                              </div>
+                            </div>
+
+                            <!-- Circular Progress -->
+                            <div class="progress-circle">
+                              <svg width="160" height="160">
+                                <circle class="progress-track" cx="80" cy="80" r="70"></circle>
+                                <circle
+                                    class="progress-bar"
+                                    cx="80"
+                                    cy="80"
+                                    r="70"
+                                    :stroke="config.primary_color || defaultConfig.primary_color"
+                                    :stroke-dasharray="getCircleProgress(stepsGoalProgress).circumference"
+                                    :stroke-dashoffset="getCircleProgress(stepsGoalProgress).offset"
+                                    transform="rotate(-90 80 80)"
+                                ></circle>
+                              </svg>
+                              <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                                <div class="text-h3 font-weight-black" :style="{ color: config.primary_color || defaultConfig.primary_color }">
+                                  {{ stepsGoalProgress }}%
+                                </div>
+                                <div class="text-caption text-grey">Concluído</div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- Weekly Chart -->
+                          <div class="mt-8">
+                            <div class="text-h6 font-weight-bold mb-4" :style="{ color: config.text_color || defaultConfig.text_color }">
+                              Últimos 7 Dias
+                            </div>
+                            <div class="weekly-chart">
+                              <div v-for="day in weeklyChart" :key="day.date" style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                                <div
+                                    class="chart-bar"
+                                    :style="{
+                                  height: (day.steps / day.maxSteps * 100) + '%',
+                                  width: '100%',
+                                  minHeight: '4px'
+                                }"
+                                ></div>
+                                <div class="text-caption text-grey mt-2 font-weight-bold">{{ day.label }}</div>
+                                <div class="text-caption text-grey">{{ (day.steps / 1000).toFixed(1) }}k</div>
+                              </div>
+                            </div>
+                          </div>
+                        </v-card-text>
+                      </v-card>
+                    </v-col>
+
+                    <!-- Health Score -->
+                    <v-col cols="12" lg="4">
+                      <v-card class="green-gradient-1 metric-card-large" elevation="4" rounded="xl" height="100%">
+                        <v-card-text class="pa-8 d-flex flex-column justify-center align-center text-center" style="height: 100%;">
+                          <v-icon size="64" color="white" class="mb-4">mdi-medal</v-icon>
+                          <div class="text-h6 text-white font-weight-bold mb-2">Score de Saúde</div>
+                          <div class="text-white mb-6" style="opacity: 0.9;">Baseado nas suas métricas de hoje</div>
+
+                          <div class="progress-circle mb-6">
+                            <svg width="180" height="180">
+                              <circle class="progress-track" cx="90" cy="90" r="70" stroke="rgba(255,255,255,0.3)"></circle>
+                              <circle
+                                  class="progress-bar"
+                                  cx="90"
+                                  cy="90"
+                                  r="70"
+                                  stroke="white"
+                                  :stroke-dasharray="getCircleProgress(healthScore).circumference"
+                                  :stroke-dashoffset="getCircleProgress(healthScore).offset"
+                                  transform="rotate(-90 90 90)"
+                              ></circle>
+                            </svg>
+                            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                              <div style="font-size: 3.5rem; font-weight: 900; color: white; line-height: 1;">
+                                {{ healthScore }}
+                              </div>
+                              <div class="text-body-1 text-white">pontos</div>
+                            </div>
+                          </div>
+
+                          <div v-if="healthScore >= 80" class="badge-success">
+                            <v-icon size="18">mdi-check-circle</v-icon>
+                            Excelente!
+                          </div>
+                          <div v-else-if="healthScore >= 60" class="badge-info">
+                            <v-icon size="18">mdi-information</v-icon>
+                            Bom trabalho!
+                          </div>
+                          <div v-else class="badge-warning">
+                            <v-icon size="18">mdi-alert</v-icon>
+                            Continue tentando!
+                          </div>
+                        </v-card-text>
+                      </v-card>
+                    </v-col>
+
+                    <!-- Heart Rate -->
+                    <v-col cols="12" sm="6" lg="3">
+                      <v-card class="metric-card-large" elevation="3" rounded="xl" :color="config.card_color || defaultConfig.card_color">
+                        <v-card-text class="pa-6">
+                          <div class="d-flex align-center mb-4">
+                            <div class="icon-large green-gradient-2 mr-4">
+                              <v-icon size="32" color="white" class="pulse-ring">mdi-heart-pulse</v-icon>
+                            </div>
+                            <div>
+                              <div class="text-caption text-grey">Freq. Cardíaca</div>
+                              <div class="stat-large" style="color: #f5576c;">
+                                {{ todayMetrics.heartRate || '--' }}
+                              </div>
+                              <div class="text-caption text-grey">bpm</div>
+                            </div>
+                          </div>
+                          <v-divider class="my-3"></v-divider>
+                          <div class="text-body-2" :style="{ color: todayMetrics.heartRate ? '#38ef7d' : '#999' }">
+                            {{ todayMetrics.heartRate ? '✓ Ritmo Normal' : 'Sem dados hoje' }}
+                          </div>
+                        </v-card-text>
+                      </v-card>
+                    </v-col>
+
+                    <!-- Water -->
+                    <v-col cols="12" sm="6" lg="3">
+                      <v-card class="metric-card-large" elevation="3" rounded="xl" :color="config.card_color || defaultConfig.card_color">
+                        <v-card-text class="pa-6">
+                          <div class="d-flex align-center mb-4">
+                            <div class="icon-large green-gradient-3 mr-4">
+                              <v-icon size="32" color="white">mdi-water</v-icon>
+                            </div>
+                            <div>
+                              <div class="text-caption text-grey">Hidratação</div>
+                              <div class="stat-large" style="color: #00b09b;">
+                                {{ todayMetrics.water }}
+                              </div>
+                              <div class="text-caption text-grey">ml / 2000ml</div>
+                            </div>
+                          </div>
+                          <v-progress-linear
+                              :model-value="waterGoalProgress"
+                              color="#00b09b"
+                              height="12"
+                              rounded
+                              class="mb-2"
+                          ></v-progress-linear>
+                          <div class="text-body-2 text-grey">{{ waterGoalProgress }}% da meta diária</div>
+                        </v-card-text>
+                      </v-card>
+                    </v-col>
+
+                    <!-- Sleep -->
+                    <v-col cols="12" sm="6" lg="3">
+                      <v-card class="metric-card-large" elevation="3" rounded="xl" :color="config.card_color || defaultConfig.card_color">
+                        <v-card-text class="pa-6">
+                          <div class="d-flex align-center mb-4">
+                            <div class="icon-large green-gradient-4 mr-4">
+                              <v-icon size="32" color="white">mdi-power-sleep</v-icon>
+                            </div>
+                            <div>
+                              <div class="text-caption text-grey">Sono</div>
+                              <div class="stat-large" style="color: #0f7c6f;">
+                                {{ todayMetrics.sleep || '--' }}
+                              </div>
+                              <div class="text-caption text-grey">horas</div>
+                            </div>
+                          </div>
+                          <v-divider class="my-3"></v-divider>
+                          <div class="text-body-2" :style="{ color: todayMetrics.sleep >= 7 ? '#38ef7d' : todayMetrics.sleep > 0 ? '#f5576c' : '#999' }">
+                            {{ todayMetrics.sleep >= 7 ? '✓ Excelente' : todayMetrics.sleep > 0 ? '⚠ Pouco sono' : 'Sem dados' }}
+                          </div>
+                        </v-card-text>
+                      </v-card>
+                    </v-col>
+
+                    <!-- Calories -->
+                    <v-col cols="12" sm="6" lg="3">
+                      <v-card class="metric-card-large" elevation="3" rounded="xl" :color="config.card_color || defaultConfig.card_color">
+                        <v-card-text class="pa-6">
+                          <div class="d-flex align-center mb-4">
+                            <div class="icon-large green-gradient-5 mr-4">
+                              <v-icon size="32" color="white">mdi-fire</v-icon>
+                            </div>
+                            <div>
+                              <div class="text-caption text-grey">Calorias</div>
+                              <div class="stat-large" style="color: #38ef7d;">
+                                {{ todayMetrics.calories }}
+                              </div>
+                              <div class="text-caption text-grey">kcal</div>
+                            </div>
+                          </div>
+                          <v-progress-linear
+                              :model-value="caloriesGoalProgress"
+                              color="#38ef7d"
+                              height="12"
+                              rounded
+                              class="mb-2"
+                          ></v-progress-linear>
+                          <div class="text-body-2 text-grey">{{ caloriesGoalProgress }}% da meta</div>
+                        </v-card-text>
+                      </v-card>
+                    </v-col>
+
+                    <!-- Exercise -->
+                    <v-col cols="12" sm="6" lg="3">
+                      <v-card class="metric-card-large" elevation="3" rounded="xl" :color="config.card_color || defaultConfig.card_color">
+                        <v-card-text class="pa-6">
+                          <div class="d-flex align-center mb-4">
+                            <div class="icon-large green-gradient-6 mr-4">
+                              <v-icon size="32" color="white">mdi-run-fast</v-icon>
+                            </div>
+                            <div>
+                              <div class="text-caption text-grey">Exercício</div>
+                              <div class="stat-large" style="color: #41b883;">
+                                {{ todayMetrics.exercise }}
+                              </div>
+                              <div class="text-caption text-grey">minutos / 60min</div>
+                            </div>
+                          </div>
+                          <v-progress-linear
+                              :model-value="exerciseGoalProgress"
+                              color="#41b883"
+                              height="12"
+                              rounded
+                              class="mb-2"
+                          ></v-progress-linear>
+                          <div class="text-body-2 text-grey">{{ exerciseGoalProgress }}% da meta</div>
+                        </v-card-text>
+                      </v-card>
+                    </v-col>
+
+                    <!-- Weight -->
+                    <v-col cols="12" sm="6" lg="3">
+                      <v-card class="metric-card-large" elevation="3" rounded="xl" :color="config.card_color || defaultConfig.card_color">
+                        <v-card-text class="pa-6">
+                          <div class="d-flex align-center mb-4">
+                            <div class="icon-large green-gradient-2 mr-4">
+                              <v-icon size="32" color="white">mdi-scale-bathroom</v-icon>
+                            </div>
+                            <div>
+                              <div class="text-caption text-grey">Peso Atual</div>
+                              <div class="stat-large" style="color: #56ab2f;">
+                                {{ todayMetrics.weight || '--' }}
+                              </div>
+                              <div class="text-caption text-grey">kg</div>
+                            </div>
+                          </div>
+                          <v-divider class="my-3"></v-divider>
+                          <div class="text-body-2 text-grey">
+                            {{ todayMetrics.weight ? 'Última medição' : 'Adicione sua primeira medição' }}
+                          </div>
+                        </v-card-text>
+                      </v-card>
+                    </v-col>
+
+                    <!-- Stress Level -->
+                    <v-col cols="12" sm="6" lg="3">
+                      <v-card class="metric-card-large" elevation="3" rounded="xl" :color="config.card_color || defaultConfig.card_color">
+                        <v-card-text class="pa-6">
+                          <div class="d-flex align-center mb-4">
+                            <div class="icon-large green-gradient-3 mr-4">
+                              <v-icon size="32" color="white">mdi-meditation</v-icon>
+                            </div>
+                            <div>
+                              <div class="text-caption text-grey">Nível de Estresse</div>
+                              <div class="stat-large" style="color: #00b09b;">
+                                {{ todayMetrics.stressLevel || '--' }}
+                              </div>
+                              <div class="text-caption text-grey">de 10</div>
+                            </div>
+                          </div>
+                          <v-divider class="my-3"></v-divider>
+                          <div class="text-body-2" :style="{ color: todayMetrics.stressLevel <= 3 ? '#38ef7d' : todayMetrics.stressLevel <= 6 ? '#a8e063' : '#f5576c' }">
+                            {{ todayMetrics.stressLevel <= 3 ? '✓ Baixo' : todayMetrics.stressLevel <= 6 ? '⚠ Moderado' : '⚠ Alto' }}
+                          </div>
+                        </v-card-text>
+                      </v-card>
+                    </v-col>
+                  </v-row>
+                </div>
+
+                <!-- Analytics Tab -->
+                <div v-if="currentTab === 'analytics'">
+                  <v-card elevation="4" rounded="xl" :color="config.card_color || defaultConfig.card_color">
+                    <v-card-text class="pa-8">
+                      <div class="text-h4 font-weight-bold mb-6 poppins" :style="{ color: config.text_color || defaultConfig.text_color }">
+                        {{ config.weekly_summary_title || defaultConfig.weekly_summary_title }}
+                      </div>
+
+                      <div class="stats-grid mb-8">
+                        <div class="stat-mini">
+                          <v-icon size="32" color="#11998e" class="mb-2">mdi-walk</v-icon>
+                          <div class="text-h5 font-weight-bold" style="color: #11998e;">{{ weeklyStats.avgSteps.toLocaleString() }}</div>
+                          <div class="text-caption text-grey">Média de Passos</div>
+                        </div>
+
+                        <div class="stat-mini">
+                          <v-icon size="32" color="#f5576c" class="mb-2">mdi-heart-pulse</v-icon>
+                          <div class="text-h5 font-weight-bold" style="color: #f5576c;">{{ weeklyStats.avgHeartRate }}</div>
+                          <div class="text-caption text-grey">FC Média (bpm)</div>
+                        </div>
+
+                        <div class="stat-mini">
+                          <v-icon size="32" color="#38ef7d" class="mb-2">mdi-fire</v-icon>
+                          <div class="text-h5 font-weight-bold" style="color: #38ef7d;">{{ weeklyStats.totalCalories.toLocaleString() }}</div>
+                          <div class="text-caption text-grey">Calorias Totais</div>
+                        </div>
+
+                        <div class="stat-mini">
+                          <v-icon size="32" color="#0f7c6f" class="mb-2">mdi-power-sleep</v-icon>
+                          <div class="text-h5 font-weight-bold" style="color: #0f7c6f;">{{ weeklyStats.avgSleep }}h</div>
+                          <div class="text-caption text-grey">Sono Médio</div>
+                        </div>
+
+                        <div class="stat-mini">
+                          <v-icon size="32" color="#41b883" class="mb-2">mdi-run-fast</v-icon>
+                          <div class="text-h5 font-weight-bold" style="color: #41b883;">{{ weeklyStats.totalExercise }}</div>
+                          <div class="text-caption text-grey">Min. de Exercício</div>
+                        </div>
+
+                        <div class="stat-mini">
+                          <v-icon size="32" color="#00b09b" class="mb-2">mdi-water</v-icon>
+                          <div class="text-h5 font-weight-bold" style="color: #00b09b;">{{ weeklyStats.avgWater }}</div>
+                          <div class="text-caption text-grey">Água Média (ml)</div>
+                        </div>
+                      </div>
+
+                      <v-row>
+                        <v-col cols="12" md="6" v-for="metric in metricTypes" :key="metric.value">
+                          <v-card variant="outlined" rounded="lg" class="pa-4">
+                            <div class="d-flex align-center mb-3">
+                              <v-avatar :color="metric.color" size="56" class="mr-3">
+                                <v-icon color="white" size="28">{{ metric.icon }}</v-icon>
+                              </v-avatar>
+                              <div class="text-h6 font-weight-bold" :style="{ color: config.text_color || defaultConfig.text_color }">
+                                {{ metric.label }}
+                              </div>
+                            </div>
+                            <div class="pa-4" :style="{ background: 'linear-gradient(135deg, ' + metric.color + '11, ' + metric.color + '05)', borderRadius: '12px' }">
+                              <v-icon :color="metric.color" size="48">{{ metric.icon }}</v-icon>
+                            </div>
+                          </v-card>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </div>
+
+                <!-- History Tab -->
+                <div v-if="currentTab === 'history'">
+                  <v-card elevation="4" rounded="xl" :color="config.card_color || defaultConfig.card_color">
+                    <v-card-text class="pa-8">
+                      <div class="text-h4 font-weight-bold mb-6 poppins" :style="{ color: config.text_color || defaultConfig.text_color }">
+                        Histórico de Atividades
+                      </div>
+
+                      <div v-if="recentActivities.length === 0" class="text-center py-12">
+                        <v-icon size="80" color="grey-lighten-2">mdi-clipboard-text-clock-outline</v-icon>
+                        <div class="text-h5 mt-4 text-grey">Nenhum registro ainda</div>
+                        <div class="text-body-1 text-grey mt-2">Comece adicionando seu primeiro registro de saúde</div>
+                        <v-btn
+                            :color="config.primary_color || defaultConfig.primary_color"
+                            variant="elevated"
+                            size="large"
+                            class="mt-6"
+                            @click="openAddDialog"
+                        >
+                          <v-icon start>mdi-plus</v-icon>
+                          Adicionar Registro
+                        </v-btn>
+                      </div>
+
+                      <div v-else class="timeline-vertical">
+                        <div v-for="activity in recentActivities" :key="activity.id" class="timeline-item">
+                          <div class="timeline-dot" :style="{ borderColor: getMetricColor(activity.type) }"></div>
+                          <v-card variant="outlined" rounded="lg" class="activity-card">
+                            <v-card-text class="pa-5">
+                              <div class="d-flex align-center justify-space-between mb-3">
+                                <div class="d-flex align-center">
+                                  <v-avatar :color="getMetricColor(activity.type)" size="40" class="mr-3">
+                                    <v-icon color="white" size="20">{{ getMetricIcon(activity.type) }}</v-icon>
+                                  </v-avatar>
+                                  <div>
+                                    <div class="text-body-1 font-weight-bold" :style="{ color: config.text_color || defaultConfig.text_color }">
+                                      {{ metricTypes.find(m => m.value === activity.type)?.label || 'Registro' }}
+                                    </div>
+                                    <div class="text-caption text-grey">
+                                      {{ formatDate(activity.date) }} às {{ formatTime(activity.time) }}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="d-flex flex-wrap gap-2 mb-2">
+                              <span v-if="activity.steps > 0" class="badge-info">
+                                <v-icon size="16">mdi-walk</v-icon>
+                                {{ activity.steps.toLocaleString() }} passos
+                              </span>
+                                <span v-if="activity.heart_rate > 0" class="badge-warning">
+                                <v-icon size="16">mdi-heart-pulse</v-icon>
+                                  {{ activity.heart_rate }} bpm
+                              </span>
+                                <span v-if="activity.water_ml > 0" class="badge-info">
+                                <v-icon size="16">mdi-water</v-icon>
+                                  {{ activity.water_ml }}ml
+                              </span>
+                                <span v-if="activity.calories > 0" class="badge-success">
+                                <v-icon size="16">mdi-fire</v-icon>
+                                  {{ activity.calories }} kcal
+                              </span>
+                                <span v-if="activity.sleep_hours > 0" class="badge-info">
+                                <v-icon size="16">mdi-power-sleep</v-icon>
+                                  {{ activity.sleep_hours }}h sono
+                              </span>
+                                <span v-if="activity.exercise_minutes > 0" class="badge-success">
+                                <v-icon size="16">mdi-run-fast</v-icon>
+                                  {{ activity.exercise_minutes }}min
+                              </span>
+                                <span v-if="activity.mood" class="badge-success">
+                                {{ getMoodEmoji(activity.mood) }} {{ moods.find(m => m.value === activity.mood)?.label }}
+                              </span>
+                              </div>
+
+                              <div v-if="activity.notes" class="text-body-2 mt-3 pa-3" style="background: rgba(17, 153, 142, 0.05); border-radius: 8px; border-left: 3px solid #11998e;">
+                                💬 {{ activity.notes }}
+                              </div>
+                            </v-card-text>
+                          </v-card>
+                        </div>
+                      </div>
+                    </v-card-text>
+                  </v-card>
+                </div>
+
+              </v-container>
+            </v-main>
+
+            <!-- Floating Action Button -->
+            <v-btn
+                class="floating-add-btn"
+                :color="config.primary_color || defaultConfig.primary_color"
+                size="x-large"
+                icon
+                elevation="12"
+                @click="openAddDialog"
+                style="transition: all 0.3s ease;"
+            >
+              <v-icon size="36">mdi-plus</v-icon>
+            </v-btn>
+
+            <!-- Add Entry Dialog -->
+            <v-dialog v-model="showAddDialog" max-width="700" persistent scrollable>
+              <v-card rounded="xl">
+                <v-card-title class="pa-6 green-gradient-1">
+                  <div class="text-h5 font-weight-bold text-white poppins">Novo Registro de Saúde</div>
+                </v-card-title>
+
+                <v-card-text class="pa-6" style="max-height: 600px;">
+                  <v-select
+                      v-model="newEntry.type"
+                      :items="metricTypes"
+                      item-title="label"
+                      item-value="value"
+                      label="Tipo de Registro"
+                      variant="outlined"
+                      density="comfortable"
+                      class="mb-4"
+                  >
+                    <template v-slot:prepend-inner>
+                      <v-icon :color="getMetricColor(newEntry.type)">
+                        {{ getMetricIcon(newEntry.type) }}
+                      </v-icon>
+                    </template>
+                  </v-select>
+
+                  <v-row class="mb-4">
+                    <v-col cols="6">
+                      <v-text-field
+                          v-model="newEntry.date"
+                          label="Data"
+                          type="date"
+                          variant="outlined"
+                          density="comfortable"
+                          prepend-inner-icon="mdi-calendar"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="6">
+                      <v-text-field
+                          v-model="newEntry.time"
+                          label="Hora"
+                          type="time"
+                          variant="outlined"
+                          density="comfortable"
+                          prepend-inner-icon="mdi-clock-outline"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+
+                  <!-- Activity Fields -->
+                  <div v-if="newEntry.type === 'activity'">
+                    <v-row>
+                      <v-col cols="6">
+                        <v-text-field
+                            v-model.number="newEntry.steps"
+                            label="Passos"
+                            type="number"
+                            variant="outlined"
+                            density="comfortable"
+                            prepend-inner-icon="mdi-walk"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="6">
+                        <v-text-field
+                            v-model.number="newEntry.exercise_minutes"
+                            label="Minutos de Exercício"
+                            type="number"
+                            variant="outlined"
+                            density="comfortable"
+                            prepend-inner-icon="mdi-run-fast"
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                    <v-text-field
+                        v-model.number="newEntry.calories"
+                        label="Calorias Queimadas (kcal)"
+                        type="number"
+                        variant="outlined"
+                        density="comfortable"
+                        prepend-inner-icon="mdi-fire"
+                        class="mb-3"
+                    ></v-text-field>
+                  </div>
+
+                  <!-- Vitals Fields -->
+                  <div v-if="newEntry.type === 'vitals'">
+                    <v-text-field
+                        v-model.number="newEntry.heart_rate"
+                        label="Frequência Cardíaca (bpm)"
+                        type="number"
+                        variant="outlined"
+                        density="comfortable"
+                        prepend-inner-icon="mdi-heart-pulse"
+                        class="mb-3"
+                    ></v-text-field>
+                    <v-row>
+                      <v-col cols="6">
+                        <v-text-field
+                            v-model.number="newEntry.blood_pressure_sys"
+                            label="Pressão Sistólica"
+                            type="number"
+                            variant="outlined"
+                            density="comfortable"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="6">
+                        <v-text-field
+                            v-model.number="newEntry.blood_pressure_dia"
+                            label="Pressão Diastólica"
+                            type="number"
+                            variant="outlined"
+                            density="comfortable"
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </div>
+
+                  <!-- Weight Field -->
+                  <v-text-field
+                      v-if="newEntry.type === 'weight'"
+                      v-model.number="newEntry.weight"
+                      label="Peso (kg)"
+                      type="number"
+                      step="0.1"
+                      variant="outlined"
+                      density="comfortable"
+                      prepend-inner-icon="mdi-scale-bathroom"
+                      class="mb-3"
+                  ></v-text-field>
+
+                  <!-- Sleep Field -->
+                  <v-text-field
+                      v-if="newEntry.type === 'sleep'"
+                      v-model.number="newEntry.sleep_hours"
+                      label="Horas de Sono"
+                      type="number"
+                      step="0.5"
+                      variant="outlined"
+                      density="comfortable"
+                      prepend-inner-icon="mdi-power-sleep"
+                      class="mb-3"
+                  ></v-text-field>
+
+                  <!-- Nutrition Field -->
+                  <v-text-field
+                      v-if="newEntry.type === 'nutrition'"
+                      v-model.number="newEntry.water_ml"
+                      label="Água Consumida (ml)"
+                      type="number"
+                      variant="outlined"
+                      density="comfortable"
+                      prepend-inner-icon="mdi-water"
+                      class="mb-3"
+                  ></v-text-field>
+
+                  <!-- Mood Selector -->
+                  <div v-if="newEntry.type === 'mood'" class="mb-4">
+                    <div class="text-subtitle-1 mb-3 font-weight-bold" :style="{ color: config.text_color || defaultConfig.text_color }">
+                      Como você está se sentindo?
+                    </div>
+                    <div class="mood-selector">
+                      <v-btn
+                          v-for="mood in moods"
+                          :key="mood.value"
+                          :class="['mood-btn', { active: newEntry.mood === mood.value }]"
+                          variant="outlined"
+                          @click="newEntry.mood = mood.value"
+                      >
+                        <div class="text-center">
+                          <div style="font-size: 2rem;">{{ mood.emoji }}</div>
+                          <div class="text-caption mt-1">{{ mood.label }}</div>
+                        </div>
+                      </v-btn>
+                    </div>
+
+                    <div class="mt-4">
+                      <div class="text-subtitle-2 mb-2">Nível de Estresse (1-10)</div>
+                      <v-slider
+                          v-model="newEntry.stress_level"
+                          :min="1"
+                          :max="10"
+                          :step="1"
+                          thumb-label
+                          :color="config.primary_color || defaultConfig.primary_color"
+                      ></v-slider>
+                    </div>
+                  </div>
+
+                  <v-textarea
+                      v-model="newEntry.notes"
+                      label="Observações"
+                      variant="outlined"
+                      density="comfortable"
+                      rows="3"
+                      prepend-inner-icon="mdi-note-text-outline"
+                      placeholder="Adicione notas sobre este registro..."
+                  ></v-textarea>
+                </v-card-text>
+
+                <v-divider></v-divider>
+
+                <v-card-actions class="pa-6">
+                  <v-spacer></v-spacer>
+                  <v-btn
+                      variant="text"
+                      size="large"
+                      @click="showAddDialog = false"
+                      :disabled="isLoading"
+                  >
+                    Cancelar
+                  </v-btn>
+                  <v-btn
+                      :color="config.primary_color || defaultConfig.primary_color"
+                      variant="elevated"
+                      size="large"
+                      @click="saveEntry"
+                      :loading="isLoading"
+                  >
+                    <v-icon start>mdi-check</v-icon>
+                    Salvar Registro
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+
+            <!-- Snackbar -->
+            <v-snackbar
+                v-model="snackbar"
+                :timeout="3000"
+                :color="config.primary_color || defaultConfig.primary_color"
+                location="top"
+                rounded="pill"
+            >
+              <div class="d-flex align-center">
+                <v-icon start>mdi-check-circle</v-icon>
+                {{ snackbarText }}
+              </div>
+            </v-snackbar>
+          </v-app>
+        `
+    });
+
+    app.use(vuetify);
+    app.mount('#app');
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c0f3b43d44a4f82',t:'MTc2ODkxOTAyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

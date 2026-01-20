@@ -1,0 +1,1655 @@
+<!doctype html>
+<html lang="pt-BR" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Financeira Profissional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/_sdk/element_sdk.js"></script>
+    <script src="/_sdk/data_sdk.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+
+        * {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        html, body, #app {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .gradient-dark {
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #0a0a0a 100%);
+        }
+
+        .gradient-silver {
+            background: linear-gradient(135deg, #e5e5e5 0%, #f5f5f5 50%, #ebebeb 100%);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-light {
+            background: rgba(0, 0, 0, 0.02);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .card-elevation {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-elevation:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 32px 64px rgba(0, 0, 0, 0.15);
+        }
+
+        .input-pro {
+            transition: all 0.3s ease;
+            border: 2px solid #e5e5e5;
+        }
+
+        .input-pro:focus {
+            border-color: #000000;
+            box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #000000;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e5e5;
+            transform: translateY(-2px);
+        }
+
+        .result-animate {
+            animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .number-mono {
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -1px;
+        }
+
+        .tab-item {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #000000;
+        }
+
+        .progress-bar {
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #000000, #666666, #000000);
+        }
+
+        .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .tooltip-trigger:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .chart-bar {
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .chart-bar:hover {
+            transform: scaleY(1.05);
+            filter: brightness(0.9);
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, #f5f5f5 0%, #e5e5e5 50%, #f5f5f5 100%);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite;
+        }
+
+        .divider-line {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #e5e5e5, transparent);
+        }
+    </style>
+    <style>@view-transition { navigation: auto; }</style>
+</head>
+<body class="h-full">
+<div id="app" class="h-full w-full overflow-auto"></div>
+<script>
+    const { createApp } = Vue;
+
+    const defaultConfig = {
+        app_title: 'Calculadora Financeira Profissional',
+        app_subtitle: 'Análise completa de investimentos e planejamento',
+        compound_title: 'Análise de Juros Compostos',
+        loan_title: 'Simulação de Financiamento',
+        retirement_title: 'Planejamento de Aposentadoria',
+        background_color: '#ffffff',
+        card_color: '#f9fafb',
+        text_color: '#000000',
+        secondary_text_color: '#6b7280',
+        accent_color: '#000000',
+        border_color: '#e5e7eb',
+        font_family: 'Outfit',
+        font_size: 16
+    };
+
+    createApp({
+        data() {
+            return {
+                config: { ...defaultConfig },
+                activeCalculator: 'compound',
+                calculations: [],
+                isLoading: false,
+                showSaveDialog: false,
+                showHistoryDialog: false,
+                showDetailsModal: false,
+                selectedCalculation: null,
+                showToast: false,
+                toastMessage: '',
+                toastType: 'success',
+
+                compound: {
+                    name: '',
+                    initial: 10000,
+                    monthly: 500,
+                    rate: 10,
+                    years: 10,
+                    inflationRate: 4,
+                    result: null
+                },
+
+                loan: {
+                    name: '',
+                    amount: 200000,
+                    downPayment: 40000,
+                    rate: 10,
+                    years: 20,
+                    result: null
+                },
+
+                retirement: {
+                    name: '',
+                    currentAge: 30,
+                    retirementAge: 65,
+                    currentSavings: 50000,
+                    monthlyContribution: 1000,
+                    expectedReturn: 10,
+                    expectedInflation: 4,
+                    retirementIncome: 5000,
+                    result: null
+                }
+            };
+        },
+
+        computed: {
+            filteredCalculations() {
+                return this.calculations.filter(c => c.type === this.activeCalculator);
+            }
+        },
+
+        methods: {
+            async initSDKs() {
+                if (window.elementSdk) {
+                    window.elementSdk.init({
+                        defaultConfig,
+                        onConfigChange: async (newConfig) => {
+                            this.config = { ...defaultConfig, ...newConfig };
+                            this.applyConfig();
+                        },
+                        mapToCapabilities: (cfg) => ({
+                            recolorables: [
+                                {
+                                    get: () => cfg.background_color || defaultConfig.background_color,
+                                    set: (v) => { cfg.background_color = v; window.elementSdk.setConfig({ background_color: v }); }
+                                },
+                                {
+                                    get: () => cfg.card_color || defaultConfig.card_color,
+                                    set: (v) => { cfg.card_color = v; window.elementSdk.setConfig({ card_color: v }); }
+                                },
+                                {
+                                    get: () => cfg.text_color || defaultConfig.text_color,
+                                    set: (v) => { cfg.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
+                                },
+                                {
+                                    get: () => cfg.accent_color || defaultConfig.accent_color,
+                                    set: (v) => { cfg.accent_color = v; window.elementSdk.setConfig({ accent_color: v }); }
+                                },
+                                {
+                                    get: () => cfg.border_color || defaultConfig.border_color,
+                                    set: (v) => { cfg.border_color = v; window.elementSdk.setConfig({ border_color: v }); }
+                                }
+                            ],
+                            borderables: [],
+                            fontEditable: {
+                                get: () => cfg.font_family || defaultConfig.font_family,
+                                set: (v) => { cfg.font_family = v; window.elementSdk.setConfig({ font_family: v }); }
+                            },
+                            fontSizeable: {
+                                get: () => cfg.font_size || defaultConfig.font_size,
+                                set: (v) => { cfg.font_size = v; window.elementSdk.setConfig({ font_size: v }); }
+                            }
+                        }),
+                        mapToEditPanelValues: (cfg) => new Map([
+                            ['app_title', cfg.app_title || defaultConfig.app_title],
+                            ['app_subtitle', cfg.app_subtitle || defaultConfig.app_subtitle],
+                            ['compound_title', cfg.compound_title || defaultConfig.compound_title],
+                            ['loan_title', cfg.loan_title || defaultConfig.loan_title],
+                            ['retirement_title', cfg.retirement_title || defaultConfig.retirement_title]
+                        ])
+                    });
+                }
+
+                if (window.dataSdk) {
+                    const result = await window.dataSdk.init({
+                        onDataChanged: (data) => {
+                            this.calculations = data;
+                        }
+                    });
+
+                    if (!result.isOk) {
+                        console.error('Failed to initialize Data SDK');
+                    }
+                }
+            },
+
+            applyConfig() {
+                const fontFamily = this.config.font_family || defaultConfig.font_family;
+                const fontSize = this.config.font_size || defaultConfig.font_size;
+                document.body.style.fontFamily = `${fontFamily}, Outfit, -apple-system, sans-serif`;
+                document.body.style.fontSize = `${fontSize}px`;
+                document.body.style.backgroundColor = this.config.background_color || defaultConfig.background_color;
+            },
+
+            calculateCompound() {
+                const P = parseFloat(this.compound.initial);
+                const PMT = parseFloat(this.compound.monthly);
+                const r = parseFloat(this.compound.rate) / 100 / 12;
+                const n = parseFloat(this.compound.years) * 12;
+                const inflation = parseFloat(this.compound.inflationRate) / 100 / 12;
+
+                const futureValueInitial = P * Math.pow(1 + r, n);
+                const futureValueMonthly = PMT * ((Math.pow(1 + r, n) - 1) / r);
+                const totalFuture = futureValueInitial + futureValueMonthly;
+                const totalInvested = P + (PMT * n);
+                const totalInterest = totalFuture - totalInvested;
+
+                const realValue = totalFuture / Math.pow(1 + inflation, n);
+                const realReturn = ((totalFuture / totalInvested) - 1) * 100;
+                const avgMonthlyReturn = (Math.pow(totalFuture / P, 1/n) - 1) * 100;
+
+                this.compound.result = {
+                    finalValue: totalFuture,
+                    totalInvested: totalInvested,
+                    totalInterest: totalInterest,
+                    realValue: realValue,
+                    realReturn: realReturn,
+                    avgMonthlyReturn: avgMonthlyReturn,
+                    roi: (totalInterest / totalInvested) * 100,
+                    monthlyBreakdown: this.generateMonthlyBreakdown(P, PMT, r, n),
+                    yearlyBreakdown: this.generateYearlyBreakdown(P, PMT, r, this.compound.years)
+                };
+            },
+
+            generateMonthlyBreakdown(initial, monthly, rate, months) {
+                const breakdown = [];
+                let balance = initial;
+
+                for (let i = 1; i <= months; i++) {
+                    const interest = balance * rate;
+                    balance = balance + interest + monthly;
+                    const invested = initial + (monthly * i);
+
+                    breakdown.push({
+                        month: i,
+                        balance: balance,
+                        invested: invested,
+                        interest: balance - invested,
+                        interestEarned: interest
+                    });
+                }
+
+                return breakdown;
+            },
+
+            generateYearlyBreakdown(initial, monthly, rate, years) {
+                const breakdown = [];
+                let balance = initial;
+
+                for (let year = 1; year <= years; year++) {
+                    for (let month = 1; month <= 12; month++) {
+                        const interest = balance * rate;
+                        balance = balance + interest + monthly;
+                    }
+
+                    const monthsPassed = year * 12;
+                    const invested = initial + (monthly * monthsPassed);
+
+                    breakdown.push({
+                        year: year,
+                        balance: balance,
+                        invested: invested,
+                        interest: balance - invested,
+                        percentGain: ((balance / invested) - 1) * 100
+                    });
+                }
+
+                return breakdown;
+            },
+
+            calculateLoan() {
+                const principal = parseFloat(this.loan.amount) - parseFloat(this.loan.downPayment);
+                const r = parseFloat(this.loan.rate) / 100 / 12;
+                const n = parseFloat(this.loan.years) * 12;
+
+                const monthlyPayment = principal * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+                const totalPayment = monthlyPayment * n;
+                const totalInterest = totalPayment - principal;
+                const totalCost = totalPayment + parseFloat(this.loan.downPayment);
+
+                const firstYearInterest = this.calculatePeriodInterest(principal, r, 12, monthlyPayment);
+                const firstYearPrincipal = (monthlyPayment * 12) - firstYearInterest;
+
+                this.loan.result = {
+                    loanAmount: principal,
+                    monthlyPayment: monthlyPayment,
+                    totalPayment: totalPayment,
+                    totalInterest: totalInterest,
+                    totalCost: totalCost,
+                    effectiveRate: (totalInterest / principal) * 100,
+                    firstYearInterest: firstYearInterest,
+                    firstYearPrincipal: firstYearPrincipal,
+                    amortization: this.generateAmortization(principal, r, n, monthlyPayment),
+                    yearlyAmortization: this.generateYearlyAmortization(principal, r, n, monthlyPayment, this.loan.years)
+                };
+            },
+
+            calculatePeriodInterest(balance, rate, months, payment) {
+                let totalInterest = 0;
+                let currentBalance = balance;
+
+                for (let i = 0; i < months; i++) {
+                    const interest = currentBalance * rate;
+                    totalInterest += interest;
+                    currentBalance -= (payment - interest);
+                }
+
+                return totalInterest;
+            },
+
+            generateAmortization(principal, rate, months, payment) {
+                const schedule = [];
+                let balance = principal;
+
+                for (let i = 1; i <= Math.min(months, 24); i++) {
+                    const interestPayment = balance * rate;
+                    const principalPayment = payment - interestPayment;
+                    balance -= principalPayment;
+
+                    schedule.push({
+                        month: i,
+                        payment: payment,
+                        principal: principalPayment,
+                        interest: interestPayment,
+                        balance: Math.max(0, balance),
+                        percentPaid: ((principal - balance) / principal) * 100
+                    });
+                }
+
+                return schedule;
+            },
+
+            generateYearlyAmortization(principal, rate, months, payment, years) {
+                const schedule = [];
+                let balance = principal;
+
+                for (let year = 1; year <= years; year++) {
+                    let yearInterest = 0;
+                    let yearPrincipal = 0;
+
+                    for (let month = 1; month <= 12; month++) {
+                        const interestPayment = balance * rate;
+                        const principalPayment = payment - interestPayment;
+                        balance -= principalPayment;
+                        yearInterest += interestPayment;
+                        yearPrincipal += principalPayment;
+                    }
+
+                    schedule.push({
+                        year: year,
+                        totalPaid: payment * 12,
+                        principal: yearPrincipal,
+                        interest: yearInterest,
+                        balance: Math.max(0, balance),
+                        percentPaid: ((principal - balance) / principal) * 100
+                    });
+                }
+
+                return schedule;
+            },
+
+            calculateRetirement() {
+                const yearsToRetirement = this.retirement.retirementAge - this.retirement.currentAge;
+                const months = yearsToRetirement * 12;
+                const monthlyRate = this.retirement.expectedReturn / 100 / 12;
+                const inflationRate = this.retirement.expectedInflation / 100 / 12;
+
+                const futureValueCurrent = this.retirement.currentSavings * Math.pow(1 + monthlyRate, months);
+                const futureValueContributions = this.retirement.monthlyContribution *
+                    ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate);
+
+                const totalSavings = futureValueCurrent + futureValueContributions;
+                const totalContributions = this.retirement.currentSavings +
+                    (this.retirement.monthlyContribution * months);
+                const totalGrowth = totalSavings - totalContributions;
+
+                const monthlyIncome = totalSavings * (this.retirement.expectedReturn / 100) / 12;
+                const realMonthlyIncome = monthlyIncome / Math.pow(1 + inflationRate, months);
+
+                const yearsOfRetirement = Math.floor(totalSavings / (this.retirement.retirementIncome * 12));
+                const replacementRate = (monthlyIncome / this.retirement.retirementIncome) * 100;
+
+                this.retirement.result = {
+                    totalSavings: totalSavings,
+                    totalContributions: totalContributions,
+                    totalGrowth: totalGrowth,
+                    yearsToRetirement: yearsToRetirement,
+                    monthlyIncome: monthlyIncome,
+                    realMonthlyIncome: realMonthlyIncome,
+                    yearsOfRetirement: yearsOfRetirement,
+                    replacementRate: replacementRate,
+                    finalAge: this.retirement.retirementAge + yearsOfRetirement,
+                    yearlyBreakdown: this.generateRetirementBreakdown(
+                        this.retirement.currentSavings,
+                        this.retirement.monthlyContribution,
+                        monthlyRate,
+                        yearsToRetirement
+                    )
+                };
+            },
+
+            generateRetirementBreakdown(initial, monthly, rate, years) {
+                const breakdown = [];
+                let balance = initial;
+                let age = this.retirement.currentAge;
+
+                for (let year = 1; year <= years; year++) {
+                    for (let month = 1; month <= 12; month++) {
+                        balance = balance * (1 + rate) + monthly;
+                    }
+
+                    age++;
+                    const contributed = initial + (monthly * year * 12);
+
+                    breakdown.push({
+                        year: year,
+                        age: age,
+                        balance: balance,
+                        contributed: contributed,
+                        growth: balance - contributed
+                    });
+                }
+
+                return breakdown;
+            },
+
+            async saveCalculation() {
+                if (this.calculations.length >= 999) {
+                    this.showToastMessage('Limite de 999 cálculos atingido. Exclua alguns primeiro.', 'error');
+                    return;
+                }
+
+                this.isLoading = true;
+
+                let calcData = {};
+                const timestamp = new Date().toISOString();
+
+                if (this.activeCalculator === 'compound' && this.compound.result) {
+                    calcData = {
+                        id: Date.now().toString(),
+                        type: 'compound',
+                        name: this.compound.name || 'Análise de Juros Compostos',
+                        date: timestamp,
+                        initial_value: this.compound.initial,
+                        monthly_contribution: this.compound.monthly,
+                        interest_rate: this.compound.rate,
+                        time_months: this.compound.years * 12,
+                        final_value: this.compound.result.finalValue,
+                        total_invested: this.compound.result.totalInvested,
+                        total_interest: this.compound.result.totalInterest,
+                        notes: `ROI: ${this.compound.result.roi.toFixed(2)}% | Retorno Real: ${this.compound.result.realReturn.toFixed(2)}%`
+                    };
+                } else if (this.activeCalculator === 'loan' && this.loan.result) {
+                    calcData = {
+                        id: Date.now().toString(),
+                        type: 'loan',
+                        name: this.loan.name || 'Simulação de Financiamento',
+                        date: timestamp,
+                        initial_value: this.loan.amount,
+                        monthly_contribution: this.loan.result.monthlyPayment,
+                        interest_rate: this.loan.rate,
+                        time_months: this.loan.years * 12,
+                        final_value: this.loan.result.totalCost,
+                        total_invested: this.loan.amount,
+                        total_interest: this.loan.result.totalInterest,
+                        notes: `Entrada: R$ ${this.loan.downPayment.toFixed(2)} | Taxa Efetiva: ${this.loan.result.effectiveRate.toFixed(2)}%`
+                    };
+                } else if (this.activeCalculator === 'retirement' && this.retirement.result) {
+                    calcData = {
+                        id: Date.now().toString(),
+                        type: 'retirement',
+                        name: this.retirement.name || 'Planejamento de Aposentadoria',
+                        date: timestamp,
+                        initial_value: this.retirement.currentSavings,
+                        monthly_contribution: this.retirement.monthlyContribution,
+                        interest_rate: this.retirement.expectedReturn,
+                        time_months: (this.retirement.retirementAge - this.retirement.currentAge) * 12,
+                        final_value: this.retirement.result.totalSavings,
+                        total_invested: this.retirement.result.totalContributions,
+                        total_interest: this.retirement.result.totalGrowth,
+                        notes: `Renda Mensal: R$ ${this.retirement.result.monthlyIncome.toFixed(2)} | Anos de Aposentadoria: ${this.retirement.result.yearsOfRetirement}`
+                    };
+                }
+
+                const result = await window.dataSdk.create(calcData);
+
+                this.isLoading = false;
+
+                if (result.isOk) {
+                    this.showSaveDialog = false;
+                    this.showToastMessage('Cálculo salvo com sucesso!', 'success');
+                } else {
+                    this.showToastMessage('Erro ao salvar. Tente novamente.', 'error');
+                }
+            },
+
+            async deleteCalculation(calc) {
+                this.isLoading = true;
+                const result = await window.dataSdk.delete(calc);
+                this.isLoading = false;
+
+                if (result.isOk) {
+                    this.showToastMessage('Cálculo excluído com sucesso!', 'success');
+                } else {
+                    this.showToastMessage('Erro ao excluir. Tente novamente.', 'error');
+                }
+            },
+
+            viewDetails(calc) {
+                this.selectedCalculation = calc;
+                this.showDetailsModal = true;
+            },
+
+            formatCurrency(value) {
+                return new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                }).format(value);
+            },
+
+            formatPercent(value) {
+                return `${value.toFixed(2)}%`;
+            },
+
+            formatDate(dateString) {
+                return new Date(dateString).toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            },
+
+            showToastMessage(message, type = 'success') {
+                this.toastMessage = message;
+                this.toastType = type;
+                this.showToast = true;
+                setTimeout(() => {
+                    this.showToast = false;
+                }, 3500);
+            },
+
+            openSaveDialog() {
+                this.showSaveDialog = true;
+            },
+
+            getMaxChartValue(data, key) {
+                return Math.max(...data.map(d => d[key]));
+            }
+        },
+
+        mounted() {
+            this.initSDKs();
+            this.applyConfig();
+        },
+
+        template: `
+          <div class="w-full h-full" :style="{ backgroundColor: config.background_color, color: config.text_color }">
+
+            <!-- Header -->
+            <header class="gradient-dark text-white border-b-4 border-gray-800">
+              <div class="max-w-7xl mx-auto px-6 py-8">
+                <div class="flex items-center justify-between mb-8">
+                  <div class="flex items-center space-x-6">
+                    <div class="w-20 h-20 bg-white bg-opacity-10 rounded-2xl flex items-center justify-center backdrop-blur-xl border border-white border-opacity-20">
+                      <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h1 class="text-5xl font-black tracking-tight mb-2" :style="{ fontSize: (config.font_size * 2.5) + 'px' }">
+                        {{ config.app_title }}
+                      </h1>
+                      <p class="text-xl text-gray-300 font-medium" :style="{ fontSize: (config.font_size * 1.25) + 'px' }">
+                        {{ config.app_subtitle }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                      @click="showHistoryDialog = true"
+                      class="px-8 py-4 bg-white bg-opacity-10 hover:bg-opacity-20 rounded-xl font-bold text-lg transition-all backdrop-blur-xl border border-white border-opacity-20 flex items-center space-x-3"
+                  >
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    <span>Histórico</span>
+                    <span v-if="calculations.length > 0" class="bg-white text-black px-3 py-1 rounded-full text-sm font-black mono">
+                    {{ calculations.length }}
+                  </span>
+                  </button>
+                </div>
+
+                <!-- Tabs -->
+                <div class="flex space-x-2 bg-black bg-opacity-30 p-2 rounded-xl backdrop-blur-xl border border-white border-opacity-10">
+                  <button
+                      @click="activeCalculator = 'compound'"
+                      :class="['tab-item flex-1 px-6 py-4 rounded-lg font-bold text-base transition-all',
+                    activeCalculator === 'compound' ? 'bg-white text-black' : 'text-white hover:bg-white hover:bg-opacity-10']"
+                  >
+                    <div class="flex items-center justify-center space-x-2">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                      </svg>
+                      <span>Juros Compostos</span>
+                    </div>
+                  </button>
+                  <button
+                      @click="activeCalculator = 'loan'"
+                      :class="['tab-item flex-1 px-6 py-4 rounded-lg font-bold text-base transition-all',
+                    activeCalculator === 'loan' ? 'bg-white text-black' : 'text-white hover:bg-white hover:bg-opacity-10']"
+                  >
+                    <div class="flex items-center justify-center space-x-2">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                      </svg>
+                      <span>Financiamento</span>
+                    </div>
+                  </button>
+                  <button
+                      @click="activeCalculator = 'retirement'"
+                      :class="['tab-item flex-1 px-6 py-4 rounded-lg font-bold text-base transition-all',
+                    activeCalculator === 'retirement' ? 'bg-white text-black' : 'text-white hover:bg-white hover:bg-opacity-10']"
+                  >
+                    <div class="flex items-center justify-center space-x-2">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                      </svg>
+                      <span>Aposentadoria</span>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="max-w-7xl mx-auto px-6 py-10">
+
+              <!-- Compound Interest Calculator -->
+              <div v-if="activeCalculator === 'compound'" class="space-y-8">
+                <div class="grid lg:grid-cols-5 gap-8">
+
+                  <!-- Input Panel -->
+                  <div class="lg:col-span-2 space-y-6">
+                    <div class="card-elevation rounded-2xl shadow-2xl p-8 border-2"
+                         :style="{ backgroundColor: config.card_color, borderColor: config.border_color }">
+                      <h2 class="text-3xl font-black mb-8 flex items-center" :style="{ fontSize: (config.font_size * 1.75) + 'px' }">
+                        <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                        {{ config.compound_title }}
+                      </h2>
+
+                      <div class="space-y-6">
+                        <div>
+                          <label class="block text-sm font-bold mb-3 uppercase tracking-wide" :style="{ fontSize: (config.font_size * 0.875) + 'px' }">
+                            Valor Inicial
+                          </label>
+                          <div class="relative">
+                            <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-xl font-bold text-gray-400">R$</span>
+                            <input
+                                v-model.number="compound.initial"
+                                type="number"
+                                class="input-pro w-full pl-14 pr-4 py-4 rounded-xl font-bold text-xl mono"
+                                :style="{ fontSize: (config.font_size * 1.25) + 'px' }"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label class="block text-sm font-bold mb-3 uppercase tracking-wide" :style="{ fontSize: (config.font_size * 0.875) + 'px' }">
+                            Aporte Mensal
+                          </label>
+                          <div class="relative">
+                            <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-xl font-bold text-gray-400">R$</span>
+                            <input
+                                v-model.number="compound.monthly"
+                                type="number"
+                                class="input-pro w-full pl-14 pr-4 py-4 rounded-xl font-bold text-xl mono"
+                                :style="{ fontSize: (config.font_size * 1.25) + 'px' }"
+                            />
+                          </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                          <div>
+                            <label class="block text-sm font-bold mb-3 uppercase tracking-wide" :style="{ fontSize: (config.font_size * 0.875) + 'px' }">
+                              Taxa Anual
+                            </label>
+                            <div class="relative">
+                              <input
+                                  v-model.number="compound.rate"
+                                  type="number"
+                                  step="0.1"
+                                  class="input-pro w-full px-4 py-4 rounded-xl font-bold text-xl mono"
+                                  :style="{ fontSize: (config.font_size * 1.25) + 'px' }"
+                              />
+                              <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-xl font-bold text-gray-400">%</span>
+                            </div>
+                          </div>
+
+                          <div>
+                            <label class="block text-sm font-bold mb-3 uppercase tracking-wide" :style="{ fontSize: (config.font_size * 0.875) + 'px' }">
+                              Período
+                            </label>
+                            <div class="relative">
+                              <input
+                                  v-model.number="compound.years"
+                                  type="number"
+                                  class="input-pro w-full px-4 py-4 rounded-xl font-bold text-xl mono"
+                                  :style="{ fontSize: (config.font_size * 1.25) + 'px' }"
+                              />
+                              <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-sm font-bold text-gray-400 uppercase">anos</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label class="block text-sm font-bold mb-3 uppercase tracking-wide" :style="{ fontSize: (config.font_size * 0.875) + 'px' }">
+                            Inflação Anual (Opcional)
+                          </label>
+                          <div class="relative">
+                            <input
+                                v-model.number="compound.inflationRate"
+                                type="number"
+                                step="0.1"
+                                class="input-pro w-full px-4 py-4 rounded-xl font-bold text-xl mono"
+                                :style="{ fontSize: (config.font_size * 1.25) + 'px' }"
+                            />
+                            <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-xl font-bold text-gray-400">%</span>
+                          </div>
+                        </div>
+
+                        <button
+                            @click="calculateCompound"
+                            class="btn-primary w-full py-5 rounded-xl font-black text-xl tracking-wide uppercase"
+                            :style="{ fontSize: (config.font_size * 1.25) + 'px' }"
+                        >
+                          Calcular Projeção
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Results Panel -->
+                  <div v-if="compound.result" class="lg:col-span-3 space-y-6 result-animate">
+
+                    <!-- Main Result Card -->
+                    <div class="stat-card rounded-2xl shadow-2xl p-8 border-2"
+                         :style="{ backgroundColor: config.card_color, borderColor: config.border_color }">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-2">
+                          <p class="text-sm font-bold text-gray-500 mb-2 uppercase tracking-wide">Valor Final Acumulado</p>
+                          <h3 class="text-6xl font-black number-mono" :style="{ fontSize: (config.font_size * 3.5) + 'px' }">
+                            {{ formatCurrency(compound.result.finalValue) }}
+                          </h3>
+                          <p class="text-lg text-gray-600 mt-4 font-semibold">
+                            em {{ compound.years }} anos ({{ compound.years * 12 }} meses)
+                          </p>
+                        </div>
+
+                        <div class="flex flex-col justify-center items-end">
+                          <div class="text-right mb-4">
+                            <p class="text-xs font-bold text-gray-500 mb-1 uppercase">ROI</p>
+                            <p class="text-3xl font-black text-green-600 mono">
+                              +{{ formatPercent(compound.result.roi) }}
+                            </p>
+                          </div>
+                          <button
+                              @click="openSaveDialog"
+                              class="btn-primary px-6 py-3 rounded-lg font-bold"
+                          >
+                            Salvar Análise
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-4 gap-4">
+                      <div class="glass-light rounded-xl p-5 border" :style="{ borderColor: config.border_color }">
+                        <p class="text-xs font-bold text-gray-500 mb-2 uppercase">Total Investido</p>
+                        <p class="text-2xl font-black number-mono" :style="{ fontSize: (config.font_size * 1.5) + 'px' }">
+                          {{ formatCurrency(compound.result.totalInvested) }}
+                        </p>
+                      </div>
+
+                      <div class="glass-light rounded-xl p-5 border" :style="{ borderColor: config.border_color }">
+                        <p class="text-xs font-bold text-gray-500 mb-2 uppercase">Juros Ganhos</p>
+                        <p class="text-2xl font-black number-mono text-green-600" :style="{ fontSize: (config.font_size * 1.5) + 'px' }">
+                          {{ formatCurrency(compound.result.totalInterest) }}
+                        </p>
+                      </div>
+
+                      <div class="glass-light rounded-xl p-5 border" :style="{ borderColor: config.border_color }">
+                        <p class="text-xs font-bold text-gray-500 mb-2 uppercase">Retorno Real</p>
+                        <p class="text-2xl font-black number-mono" :style="{ fontSize: (config.font_size * 1.5) + 'px' }">
+                          {{ formatPercent(compound.result.realReturn) }}
+                        </p>
+                      </div>
+
+                      <div class="glass-light rounded-xl p-5 border" :style="{ borderColor: config.border_color }">
+                        <p class="text-xs font-bold text-gray-500 mb-2 uppercase">Valor Real</p>
+                        <p class="text-2xl font-black number-mono" :style="{ fontSize: (config.font_size * 1.5) + 'px' }">
+                          {{ formatCurrency(compound.result.realValue) }}
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- Yearly Evolution Chart -->
+                    <div class="rounded-2xl shadow-2xl p-8 border-2"
+                         :style="{ backgroundColor: config.card_color, borderColor: config.border_color }">
+                      <h4 class="text-xl font-black mb-6 uppercase tracking-wide">Evolução Anual do Patrimônio</h4>
+                      <div class="space-y-4">
+                        <div v-for="item in compound.result.yearlyBreakdown" :key="item.year"
+                             class="flex items-center space-x-4">
+                          <div class="w-20 text-right">
+                            <span class="text-sm font-black text-gray-500 mono">ANO {{ item.year }}</span>
+                          </div>
+                          <div class="flex-1">
+                            <div class="relative h-12 bg-gray-200 rounded-lg overflow-hidden">
+                              <div
+                                  class="chart-bar absolute inset-y-0 left-0 bg-gradient-to-r from-black to-gray-700 rounded-lg flex items-center justify-end pr-4"
+                                  :style="{ width: ((item.balance / getMaxChartValue(compound.result.yearlyBreakdown, 'balance')) * 100) + '%' }"
+                              >
+                              <span class="text-white font-bold text-sm mono">
+                                {{ formatCurrency(item.balance) }}
+                              </span>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="w-32 text-right">
+                          <span class="text-sm font-black text-green-600 mono">
+                            +{{ formatPercent(item.percentGain) }}
+                          </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div v-else class="lg:col-span-3 rounded-2xl shadow-2xl p-16 flex flex-col items-center justify-center text-center border-2"
+                       :style="{ backgroundColor: config.card_color, borderColor: config.border_color }">
+                    <svg class="w-32 h-32 text-gray-300 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    <h3 class="text-2xl font-black text-gray-400 mb-2">Preencha os dados</h3>
+                    <p class="text-gray-500 font-medium">Os resultados aparecerão aqui após o cálculo</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Loan Calculator -->
+              <div v-if="activeCalculator === 'loan'" class="space-y-8">
+                <div class="grid lg:grid-cols-5 gap-8">
+
+                  <!-- Input Panel -->
+                  <div class="lg:col-span-2 space-y-6">
+                    <div class="card-elevation rounded-2xl shadow-2xl p-8 border-2"
+                         :style="{ backgroundColor: config.card_color, borderColor: config.border_color }">
+                      <h2 class="text-3xl font-black mb-8 flex items-center" :style="{ fontSize: (config.font_size * 1.75) + 'px' }">
+                        <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                        {{ config.loan_title }}
+                      </h2>
+
+                      <div class="space-y-6">
+                        <div>
+                          <label class="block text-sm font-bold mb-3 uppercase tracking-wide" :style="{ fontSize: (config.font_size * 0.875) + 'px' }">
+                            Valor do Imóvel/Bem
+                          </label>
+                          <div class="relative">
+                            <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-xl font-bold text-gray-400">R$</span>
+                            <input
+                                v-model.number="loan.amount"
+                                type="number"
+                                class="input-pro w-full pl-14 pr-4 py-4 rounded-xl font-bold text-xl mono"
+                                :style="{ fontSize: (config.font_size * 1.25) + 'px' }"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label class="block text-sm font-bold mb-3 uppercase tracking-wide" :style="{ fontSize: (config.font_size * 0.875) + 'px' }">
+                            Valor de Entrada
+                          </label>
+                          <div class="relative">
+                            <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-xl font-bold text-gray-400">R$</span>
+                            <input
+                                v-model.number="loan.downPayment"
+                                type="number"
+                                class="input-pro w-full pl-14 pr-4 py-4 rounded-xl font-bold text-xl mono"
+                                :style="{ fontSize: (config.font_size * 1.25) + 'px' }"
+                            />
+                          </div>
+                          <p class="text-sm text-gray-500 mt-2 font-semibold">
+                            {{ formatPercent((loan.downPayment / loan.amount) * 100) }} do valor total
+                          </p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                          <div>
+                            <label class="block text-sm font-bold mb-3 uppercase tracking-wide" :style="{ fontSize: (config.font_size * 0.875) + 'px' }">
+                              Taxa Anual
+                            </label>
+                            <div class="relative">
+                              <input
+                                  v-model.number="loan.rate"
+                                  type="number"
+                                  step="0.1"
+                                  class="input-pro w-full px-4 py-4 rounded-xl font-bold text-xl mono"
+                                  :style="{ fontSize: (config.font_size * 1.25) + 'px' }"
+                              />
+                              <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-xl font-bold text-gray-400">%</span>
+                            </div>
+                          </div>
+
+                          <div>
+                            <label class="block text-sm font-bold mb-3 uppercase tracking-wide" :style="{ fontSize: (config.font_size * 0.875) + 'px' }">
+                              Prazo
+                            </label>
+                            <div class="relative">
+                              <input
+                                  v-model.number="loan.years"
+                                  type="number"
+                                  class="input-pro w-full px-4 py-4 rounded-xl font-bold text-xl mono"
+                                  :style="{ fontSize: (config.font_size * 1.25) + 'px' }"
+                              />
+                              <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-sm font-bold text-gray-400 uppercase">anos</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <button
+                            @click="calculateLoan"
+                            class="btn-primary w-full py-5 rounded-xl font-black text-xl tracking-wide uppercase"
+                            :style="{ fontSize: (config.font_size * 1.25) + 'px' }"
+                        >
+                          Calcular Parcelas
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Results Panel -->
+                  <div v-if="loan.result" class="lg:col-span-3 space-y-6 result-animate">
+
+                    <!-- Main Result Card -->
+                    <div class="stat-card rounded-2xl shadow-2xl p-8 border-2"
+                         :style="{ backgroundColor: config.card_color, borderColor: config.border_color }">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-2">
+                          <p class="text-sm font-bold text-gray-500 mb-2 uppercase tracking-wide">Parcela Mensal</p>
+                          <h3 class="text-6xl font-black number-mono" :style="{ fontSize: (config.font_size * 3.5) + 'px' }">
+                            {{ formatCurrency(loan.result.monthlyPayment) }}
+                          </h3>
+                          <p class="text-lg text-gray-600 mt-4 font-semibold">
+                            durante {{ loan.years }} anos ({{ loan.years * 12 }} parcelas)
+                          </p>
+                        </div>
+
+                        <div class="flex flex-col justify-center items-end">
+                          <div class="text-right mb-4">
+                            <p class="text-xs font-bold text-gray-500 mb-1 uppercase">Taxa Efetiva</p>
+                            <p class="text-3xl font-black text-red-600 mono">
+                              {{ formatPercent(loan.result.effectiveRate) }}
+                            </p>
+                          </div>
+                          <button
+                              @click="openSaveDialog"
+                              class="btn-primary px-6 py-3 rounded-lg font-bold"
+                          >
+                            Salvar Simulação
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-4 gap-4">
+                      <div class="glass-light rounded-xl p-5 border" :style="{ borderColor: config.border_color }">
+                        <p class="text-xs font-bold text-gray-500 mb-2 uppercase">Valor Financiado</p>
+                        <p class="text-2xl font-black number-mono" :style="{ fontSize: (config.font_size * 1.5) + 'px' }">
+                          {{ formatCurrency(loan.result.loanAmount) }}
+                        </p>
+                      </div>
+
+                      <div class="glass-light rounded-xl p-5 border" :style="{ borderColor: config.border_color }">
+                        <p class="text-xs font-bold text-gray-500 mb-2 uppercase">Total de Juros</p>
+                        <p class="text-2xl font-black number-mono text-red-600" :style="{ fontSize: (config.font_size * 1.5) + 'px' }">
+                          {{ formatCurrency(loan.result.totalInterest) }}
+                        </p>
+                      </div>
+
+                      <div class="glass-light rounded-xl p-5 border" :style="{ borderColor: config.border_color }">
+                        <p class="text-xs font-bold text-gray-500 mb-2 uppercase">Total a Pagar</p>
+                        <p class="text-2xl font-black number-mono" :style="{ fontSize: (config.font_size * 1.5) + 'px' }">
+                          {{ formatCurrency(loan.result.totalPayment) }}
+                        </p>
+                      </div>
+
+                      <div class="glass-light rounded-xl p-5 border" :style="{ borderColor: config.border_color }">
+                        <p class="text-xs font-bold text-gray-500 mb-2 uppercase">Custo Total</p>
+                        <p class="text-2xl font-black number-mono" :style="{ fontSize: (config.font_size * 1.5) + 'px' }">
+                          {{ formatCurrency(loan.result.totalCost) }}
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- Amortization Table -->
+                    <div class="rounded-2xl shadow-2xl p-8 border-2"
+                         :style="{ backgroundColor: config.card_color, borderColor: config.border_color }">
+                      <h4 class="text-xl font-black mb-6 uppercase tracking-wide">Tabela de Amortização (Primeiros 2 Anos)</h4>
+                      <div class="overflow-x-auto">
+                        <table class="w-full">
+                          <thead>
+                          <tr class="border-b-2" :style="{ borderColor: config.border_color }">
+                            <th class="text-left py-3 px-4 text-xs font-black uppercase tracking-wide text-gray-500">Mês</th>
+                            <th class="text-right py-3 px-4 text-xs font-black uppercase tracking-wide text-gray-500">Parcela</th>
+                            <th class="text-right py-3 px-4 text-xs font-black uppercase tracking-wide text-gray-500">Amortização</th>
+                            <th class="text-right py-3 px-4 text-xs font-black uppercase tracking-wide text-gray-500">Juros</th>
+                            <th class="text-right py-3 px-4 text-xs font-black uppercase tracking-wide text-gray-500">Saldo</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          <tr v-for="item in loan.result.amortization" :key="item.month"
+                              class="border-b hover:bg-gray-50 transition-colors"
+                              :style="{ borderColor: config.border_color }">
+                            <td class="py-4 px-4 font-black mono">{{ item.month }}</td>
+                            <td class="text-right py-4 px-4 font-bold mono">{{ formatCurrency(item.payment) }}</td>
+                            <td class="text-right py-4 px-4 font-bold mono text-green-600">{{ formatCurrency(item.principal) }}</td>
+                            <td class="text-right py-4 px-4 font-bold mono text-red-600">{{ formatCurrency(item.interest) }}</td>
+                            <td class="text-right py-4 px-4 font-bold mono">{{ formatCurrency(item.balance) }}</td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <!-- Yearly Progress -->
+                    <div class="rounded-2xl shadow-2xl p-8 border-2"
+                         :style="{ backgroundColor: config.card_color, borderColor: config.border_color }">
+                      <h4 class="text-xl font-black mb-6 uppercase tracking-wide">Evolução Anual do Financiamento</h4>
+                      <div class="space-y-4">
+                        <div v-for="item in loan.result.yearlyAmortization" :key="item.year"
+                             class="border rounded-xl p-4" :style="{ borderColor: config.border_color }">
+                          <div class="flex items-center justify-between mb-3">
+                            <span class="text-sm font-black text-gray-500 mono uppercase">Ano {{ item.year }}</span>
+                            <span class="text-sm font-black mono">
+                            {{ formatPercent(item.percentPaid) }} pago
+                          </span>
+                          </div>
+                          <div class="relative h-8 bg-gray-200 rounded-lg overflow-hidden mb-3">
+                            <div
+                                class="progress-bar absolute inset-y-0 left-0 bg-gradient-to-r from-green-600 to-green-400 rounded-lg"
+                                :style="{ width: item.percentPaid + '%' }"
+                            ></div>
+                          </div>
+                          <div class="grid grid-cols-3 gap-4 text-sm">
+                            <div>
+                              <span class="text-gray-500 font-semibold">Amortização</span>
+                              <p class="font-black mono text-green-600">{{ formatCurrency(item.principal) }}</p>
+                            </div>
+                            <div>
+                              <span class="text-gray-500 font-semibold">Juros</span>
+                              <p class="font-black mono text-red-600">{{ formatCurrency(item.interest) }}</p>
+                            </div>
+                            <div>
+                              <span class="text-gray-500 font-semibold">Saldo</span>
+                              <p class="font-black mono">{{ formatCurrency(item.balance) }}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div v-else class="lg:col-span-3 rounded-2xl shadow-2xl p-16 flex flex-col items-center justify-center text-center border-2"
+                       :style="{ backgroundColor: config.card_color, borderColor: config.border_color }">
+                    <svg class="w-32 h-32 text-gray-300 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    <h3 class="text-2xl font-black text-gray-400 mb-2">Preencha os dados</h3>
+                    <p class="text-gray-500 font-medium">A simulação aparecerá aqui após o cálculo</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Retirement Calculator -->
+              <div v-if="activeCalculator === 'retirement'" class="space-y-8">
+                <div class="grid lg:grid-cols-5 gap-8">
+
+                  <!-- Input Panel -->
+                  <div class="lg:col-span-2 space-y-6">
+                    <div class="card-elevation rounded-2xl shadow-2xl p-8 border-2"
+                         :style="{ backgroundColor: config.card_color, borderColor: config.border_color }">
+                      <h2 class="text-3xl font-black mb-8 flex items-center" :style="{ fontSize: (config.font_size * 1.75) + 'px' }">
+                        <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                        </svg>
+                        {{ config.retirement_title }}
+                      </h2>
+
+                      <div class="space-y-6">
+                        <div class="grid grid-cols-2 gap-4">
+                          <div>
+                            <label class="block text-sm font-bold mb-3 uppercase tracking-wide" :style="{ fontSize: (config.font_size * 0.875) + 'px' }">
+                              Idade Atual
+                            </label>
+                            <input
+                                v-model.number="retirement.currentAge"
+                                type="number"
+                                class="input-pro w-full px-4 py-4 rounded-xl font-bold text-xl mono"
+                                :style="{ fontSize: (config.font_size * 1.25) + 'px' }"
+                            />
+                          </div>
+
+                          <div>
+                            <label class="block text-sm font-bold mb-3 uppercase tracking-wide" :style="{ fontSize: (config.font_size * 0.875) + 'px' }">
+                              Aposentadoria
+                            </label>
+                            <input
+                                v-model.number="retirement.retirementAge"
+                                type="number"
+                                class="input-pro w-full px-4 py-4 rounded-xl font-bold text-xl mono"
+                                :style="{ fontSize: (config.font_size * 1.25) + 'px' }"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label class="block text-sm font-bold mb-3 uppercase tracking-wide" :style="{ fontSize: (config.font_size * 0.875) + 'px' }">
+                            Poupança Atual
+                          </label>
+                          <div class="relative">
+                            <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-xl font-bold text-gray-400">R$</span>
+                            <input
+                                v-model.number="retirement.currentSavings"
+                                type="number"
+                                class="input-pro w-full pl-14 pr-4 py-4 rounded-xl font-bold text-xl mono"
+                                :style="{ fontSize: (config.font_size * 1.25) + 'px' }"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label class="block text-sm font-bold mb-3 uppercase tracking-wide" :style="{ fontSize: (config.font_size * 0.875) + 'px' }">
+                            Aporte Mensal
+                          </label>
+                          <div class="relative">
+                            <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-xl font-bold text-gray-400">R$</span>
+                            <input
+                                v-model.number="retirement.monthlyContribution"
+                                type="number"
+                                class="input-pro w-full pl-14 pr-4 py-4 rounded-xl font-bold text-xl mono"
+                                :style="{ fontSize: (config.font_size * 1.25) + 'px' }"
+                            />
+                          </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                          <div>
+                            <label class="block text-sm font-bold mb-3 uppercase tracking-wide" :style="{ fontSize: (config.font_size * 0.875) + 'px' }">
+                              Retorno Anual
+                            </label>
+                            <div class="relative">
+                              <input
+                                  v-model.number="retirement.expectedReturn"
+                                  type="number"
+                                  step="0.1"
+                                  class="input-pro w-full px-4 py-4 rounded-xl font-bold text-xl mono"
+                                  :style="{ fontSize: (config.font_size * 1.25) + 'px' }"
+                              />
+                              <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-xl font-bold text-gray-400">%</span>
+                            </div>
+                          </div>
+
+                          <div>
+                            <label class="block text-sm font-bold mb-3 uppercase tracking-wide" :style="{ fontSize: (config.font_size * 0.875) + 'px' }">
+                              Inflação
+                            </label>
+                            <div class="relative">
+                              <input
+                                  v-model.number="retirement.expectedInflation"
+                                  type="number"
+                                  step="0.1"
+                                  class="input-pro w-full px-4 py-4 rounded-xl font-bold text-xl mono"
+                                  :style="{ fontSize: (config.font_size * 1.25) + 'px' }"
+                              />
+                              <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-xl font-bold text-gray-400">%</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label class="block text-sm font-bold mb-3 uppercase tracking-wide" :style="{ fontSize: (config.font_size * 0.875) + 'px' }">
+                            Renda Desejada (Mensal)
+                          </label>
+                          <div class="relative">
+                            <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-xl font-bold text-gray-400">R$</span>
+                            <input
+                                v-model.number="retirement.retirementIncome"
+                                type="number"
+                                class="input-pro w-full pl-14 pr-4 py-4 rounded-xl font-bold text-xl mono"
+                                :style="{ fontSize: (config.font_size * 1.25) + 'px' }"
+                            />
+                          </div>
+                        </div>
+
+                        <button
+                            @click="calculateRetirement"
+                            class="btn-primary w-full py-5 rounded-xl font-black text-xl tracking-wide uppercase"
+                            :style="{ fontSize: (config.font_size * 1.25) + 'px' }"
+                        >
+                          Calcular Aposentadoria
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Results Panel -->
+                  <div v-if="retirement.result" class="lg:col-span-3 space-y-6 result-animate">
+
+                    <!-- Main Result Card -->
+                    <div class="stat-card rounded-2xl shadow-2xl p-8 border-2"
+                         :style="{ backgroundColor: config.card_color, borderColor: config.border_color }">
+                      <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-2">
+                          <p class="text-sm font-bold text-gray-500 mb-2 uppercase tracking-wide">Patrimônio na Aposentadoria</p>
+                          <h3 class="text-6xl font-black number-mono" :style="{ fontSize: (config.font_size * 3.5) + 'px' }">
+                            {{ formatCurrency(retirement.result.totalSavings) }}
+                          </h3>
+                          <p class="text-lg text-gray-600 mt-4 font-semibold">
+                            aos {{ retirement.retirementAge }} anos (em {{ retirement.result.yearsToRetirement }} anos)
+                          </p>
+                        </div>
+
+                        <div class="flex flex-col justify-center items-end">
+                          <div class="text-right mb-4">
+                            <p class="text-xs font-bold text-gray-500 mb-1 uppercase">Anos de Renda</p>
+                            <p class="text-3xl font-black text-green-600 mono">
+                              {{ retirement.result.yearsOfRetirement }}
+                            </p>
+                          </div>
+                          <button
+                              @click="openSaveDialog"
+                              class="btn-primary px-6 py-3 rounded-lg font-bold"
+                          >
+                            Salvar Plano
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Income Card -->
+                    <div class="stat-card rounded-2xl shadow-2xl p-8 border-2 bg-gradient-to-br from-gray-900 to-black text-white">
+                      <div class="grid grid-cols-2 gap-8">
+                        <div>
+                          <p class="text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide">Renda Mensal Estimada</p>
+                          <h3 class="text-5xl font-black number-mono mb-4" :style="{ fontSize: (config.font_size * 3) + 'px' }">
+                            {{ formatCurrency(retirement.result.monthlyIncome) }}
+                          </h3>
+                          <p class="text-sm text-gray-400 font-semibold">
+                            Baseado em rendimento de {{ retirement.expectedReturn }}% ao ano
+                          </p>
+                        </div>
+
+                        <div class="border-l border-gray-700 pl-8">
+                          <p class="text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide">Valor Real (Ajustado pela Inflação)</p>
+                          <h3 class="text-5xl font-black number-mono mb-4" :style="{ fontSize: (config.font_size * 3) + 'px' }">
+                            {{ formatCurrency(retirement.result.realMonthlyIncome) }}
+                          </h3>
+                          <p class="text-sm text-gray-400 font-semibold">
+                            Poder de compra equivalente hoje
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-4 gap-4">
+                      <div class="glass-light rounded-xl p-5 border" :style="{ borderColor: config.border_color }">
+                        <p class="text-xs font-bold text-gray-500 mb-2 uppercase">Total Investido</p>
+                        <p class="text-2xl font-black number-mono" :style="{ fontSize: (config.font_size * 1.5) + 'px' }">
+                          {{ formatCurrency(retirement.result.totalContributions) }}
+                        </p>
+                      </div>
+
+                      <div class="glass-light rounded-xl p-5 border" :style="{ borderColor: config.border_color }">
+                        <p class="text-xs font-bold text-gray-500 mb-2 uppercase">Rendimento</p>
+                        <p class="text-2xl font-black number-mono text-green-600" :style="{ fontSize: (config.font_size * 1.5) + 'px' }">
+                          {{ formatCurrency(retirement.result.totalGrowth) }}
+                        </p>
+                      </div>
+
+                      <div class="glass-light rounded-xl p-5 border" :style="{ borderColor: config.border_color }">
+                        <p class="text-xs font-bold text-gray-500 mb-2 uppercase">Taxa de Reposição</p>
+                        <p class="text-2xl font-black number-mono" :style="{ fontSize: (config.font_size * 1.5) + 'px' }">
+                          {{ formatPercent(retirement.result.replacementRate) }}
+                        </p>
+                      </div>
+
+                      <div class="glass-light rounded-xl p-5 border" :style="{ borderColor: config.border_color }">
+                        <p class="text-xs font-bold text-gray-500 mb-2 uppercase">Idade Final</p>
+                        <p class="text-2xl font-black number-mono" :style="{ fontSize: (config.font_size * 1.5) + 'px' }">
+                          {{ retirement.result.finalAge }} anos
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- Yearly Evolution -->
+                    <div class="rounded-2xl shadow-2xl p-8 border-2"
+                         :style="{ backgroundColor: config.card_color, borderColor: config.border_color }">
+                      <h4 class="text-xl font-black mb-6 uppercase tracking-wide">Evolução do Patrimônio até Aposentadoria</h4>
+                      <div class="space-y-4">
+                        <div v-for="item in retirement.result.yearlyBreakdown.filter((_, i) => i % 5 === 0 || i === retirement.result.yearlyBreakdown.length - 1)"
+                             :key="item.year"
+                             class="border rounded-xl p-4" :style="{ borderColor: config.border_color }">
+                          <div class="flex items-center justify-between mb-3">
+                            <div>
+                              <span class="text-sm font-black text-gray-500 mono uppercase">Ano {{ item.year }}</span>
+                              <span class="text-sm text-gray-500 ml-3">({{ item.age }} anos)</span>
+                            </div>
+                            <span class="text-xl font-black number-mono">
+                            {{ formatCurrency(item.balance) }}
+                          </span>
+                          </div>
+                          <div class="relative h-8 bg-gray-200 rounded-lg overflow-hidden">
+                            <div
+                                class="progress-bar absolute inset-y-0 left-0 bg-gradient-to-r from-black to-gray-600 rounded-lg"
+                                :style="{ width: ((item.balance / getMaxChartValue(retirement.result.yearlyBreakdown, 'balance')) * 100) + '%' }"
+                            ></div>
+                          </div>
+                          <div class="grid grid-cols-2 gap-4 mt-3 text-sm">
+                            <div>
+                              <span class="text-gray-500 font-semibold">Investido</span>
+                              <p class="font-black mono">{{ formatCurrency(item.contributed) }}</p>
+                            </div>
+                            <div>
+                              <span class="text-gray-500 font-semibold">Rendimento</span>
+                              <p class="font-black mono text-green-600">{{ formatCurrency(item.growth) }}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div v-else class="lg:col-span-3 rounded-2xl shadow-2xl p-16 flex flex-col items-center justify-center text-center border-2"
+                       :style="{ backgroundColor: config.card_color, borderColor: config.border_color }">
+                    <svg class="w-32 h-32 text-gray-300 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                    </svg>
+                    <h3 class="text-2xl font-black text-gray-400 mb-2">Preencha os dados</h3>
+                    <p class="text-gray-500 font-medium">Seu plano de aposentadoria aparecerá aqui após o cálculo</p>
+                  </div>
+                </div>
+              </div>
+
+            </main>
+
+            <!-- Save Dialog -->
+            <div v-if="showSaveDialog" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+              <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8 border-2" :style="{ borderColor: config.border_color }">
+                <h3 class="text-3xl font-black mb-4">Salvar Cálculo</h3>
+                <p class="text-gray-600 mb-6 font-medium">Dê um nome descritivo para este cálculo para identificá-lo facilmente no histórico.</p>
+
+                <input
+                    v-if="activeCalculator === 'compound'"
+                    v-model="compound.name"
+                    type="text"
+                    placeholder="Ex: Investimento Tesouro Direto 2024"
+                    class="input-pro w-full px-5 py-4 rounded-xl font-semibold mb-6"
+                    :style="{ fontSize: (config.font_size * 1.125) + 'px' }"
+                />
+
+                <input
+                    v-if="activeCalculator === 'loan'"
+                    v-model="loan.name"
+                    type="text"
+                    placeholder="Ex: Financiamento Apartamento Centro"
+                    class="input-pro w-full px-5 py-4 rounded-xl font-semibold mb-6"
+                    :style="{ fontSize: (config.font_size * 1.125) + 'px' }"
+                />
+
+                <input
+                    v-if="activeCalculator === 'retirement'"
+                    v-model="retirement.name"
+                    type="text"
+                    placeholder="Ex: Plano de Aposentadoria 2024-2054"
+                    class="input-pro w-full px-5 py-4 rounded-xl font-semibold mb-6"
+                    :style="{ fontSize: (config.font_size * 1.125) + 'px' }"
+                />
+
+                <div class="flex space-x-3">
+                  <button
+                      @click="showSaveDialog = false"
+                      class="btn-secondary flex-1 px-6 py-4 rounded-xl font-bold"
+                      :disabled="isLoading"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                      @click="saveCalculation"
+                      class="btn-primary flex-1 px-6 py-4 rounded-xl font-bold"
+                      :disabled="isLoading"
+                  >
+                    {{ isLoading ? 'Salvando...' : 'Salvar Agora' }}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- History Dialog -->
+            <div v-if="showHistoryDialog" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 backdrop-blur-sm overflow-y-auto">
+              <div class="bg-white rounded-2xl shadow-2xl max-w-6xl w-full p-8 my-8 border-2" :style="{ borderColor: config.border_color }">
+                <div class="flex items-center justify-between mb-8">
+                  <h3 class="text-4xl font-black">Histórico de Cálculos</h3>
+                  <button
+                      @click="showHistoryDialog = false"
+                      class="w-12 h-12 bg-gray-100 hover:bg-gray-200 rounded-xl flex items-center justify-center transition-all font-black text-xl"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <div v-if="calculations.length === 0" class="text-center py-20 text-gray-400">
+                  <svg class="w-32 h-32 mx-auto mb-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <p class="text-2xl font-black mb-2">Nenhum cálculo salvo</p>
+                  <p class="text-lg">Faça seu primeiro cálculo e salve para ver aqui!</p>
+                </div>
+
+                <div v-else class="space-y-4 max-h-[60vh] overflow-y-auto">
+                  <div
+                      v-for="calc in calculations"
+                      :key="calc.__backendId"
+                      class="glass-light rounded-xl p-6 hover:shadow-lg transition-all border-2"
+                      :style="{ borderColor: config.border_color }"
+                  >
+                    <div class="flex items-start justify-between">
+                      <div class="flex-1">
+                        <div class="flex items-center space-x-3 mb-3">
+                          <div class="w-12 h-12 bg-black text-white rounded-xl flex items-center justify-center font-black text-xl">
+                            <svg v-if="calc.type === 'compound'" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                            </svg>
+                            <svg v-if="calc.type === 'loan'" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                            <svg v-if="calc.type === 'retirement'" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <h4 class="text-xl font-black">{{ calc.name }}</h4>
+                            <p class="text-sm text-gray-500 font-semibold mono">{{ formatDate(calc.date) }}</p>
+                          </div>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-4 mt-4">
+                          <div class="bg-white rounded-lg p-4 border" :style="{ borderColor: config.border_color }">
+                            <span class="text-xs text-gray-500 font-bold uppercase block mb-1">Valor Final</span>
+                            <span class="font-black text-lg mono">
+                            {{ formatCurrency(calc.final_value) }}
+                          </span>
+                          </div>
+                          <div class="bg-white rounded-lg p-4 border" :style="{ borderColor: config.border_color }">
+                            <span class="text-xs text-gray-500 font-bold uppercase block mb-1">Investido</span>
+                            <span class="font-black text-lg mono text-gray-700">
+                            {{ formatCurrency(calc.total_invested) }}
+                          </span>
+                          </div>
+                          <div class="bg-white rounded-lg p-4 border" :style="{ borderColor: config.border_color }">
+                            <span class="text-xs text-gray-500 font-bold uppercase block mb-1">Rendimento</span>
+                            <span class="font-black text-lg mono text-green-600">
+                            {{ formatCurrency(calc.total_interest) }}
+                          </span>
+                          </div>
+                        </div>
+
+                        <p v-if="calc.notes" class="text-sm text-gray-600 mt-4 font-medium italic">{{ calc.notes }}</p>
+                      </div>
+
+                      <button
+                          @click="deleteCalculation(calc)"
+                          class="ml-6 w-12 h-12 bg-red-100 hover:bg-red-200 text-red-600 rounded-xl flex items-center justify-center transition-all font-black text-xl"
+                          :disabled="isLoading"
+                      >
+                        🗑
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Toast Notification -->
+            <div
+                v-if="showToast"
+                :class="['fixed bottom-8 right-8 px-8 py-5 rounded-xl shadow-2xl z-50 flex items-center space-x-4 font-bold border-2',
+              toastType === 'success' ? 'bg-green-50 text-green-900 border-green-200' : 'bg-red-50 text-red-900 border-red-200']"
+            >
+              <span class="text-2xl">{{ toastType === 'success' ? '✓' : '✕' }}</span>
+              <span class="text-lg">{{ toastMessage }}</span>
+            </div>
+          </div>
+        `
+    }).mount('#app');
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c0f5880a34c4f82',t:'MTc2ODkyMDIyMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
