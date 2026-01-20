@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Labs Codexis | Desenvolvimento Web de Alto Padrão</title>
+    
+    <link rel="icon" type="image/png" href="assets/logoLabs.png">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
     <script src="/_sdk/element_sdk.js"></script>
@@ -136,7 +139,6 @@
         }
     </style>
     
-    
     <style>
         .tech-card {
             background: #0f0f0f;
@@ -169,23 +171,27 @@
         }
     </style>
     
-    
-    
-    
-    
     <style>@view-transition { navigation: auto; }</style>
     <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
 </head>
 <body class="h-full bg-black text-gray-100 overflow-x-hidden">
 <div id="app-wrapper" class="w-full h-full overflow-auto">
-    <div class="circuit-pattern pointer-events-none fixed inset-0"></div><!-- Navigation -->
+    <div class="circuit-pattern pointer-events-none fixed inset-0"></div>
+    
+    <!-- Navigation -->
     <nav class="fixed top-0 left-0 right-0 z-50 glass-card">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2 sm:gap-3">
                     <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-white to-gray-300 flex items-center justify-center pulse-glow">
-                        <svg class="w-4 h-4 sm:w-6 sm:h-6 text-black" fill="none" stroke="currentColor" viewbox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                        </svg>
+                        <img
+                                src="assets/logoLabs.png"
+                                alt="Labs Codexis"
+                                class="w-32 h-32 sm:w-48 sm:h-48 object-contain"
+                        />
+                    
+                    
+                    
                     </div><span class="font-display font-bold text-base sm:text-xl tracking-tight">Labs <span class="gradient-text">Codexis</span></span>
                 </div>
                 <div class="hidden md:flex items-center gap-6 lg:gap-8"><a href="#inicio" class="text-gray-400 hover:text-white transition-colors text-sm font-medium">Início</a> <a href="#servicos" class="text-gray-400 hover:text-white transition-colors text-sm font-medium">Serviços</a> <a href="#sobre" class="text-gray-400 hover:text-white transition-colors text-sm font-medium">Sobre</a> <a href="#contato" class="text-gray-400 hover:text-white transition-colors text-sm font-medium">Contato</a>
@@ -193,6 +199,7 @@
             </div>
         </div>
     </nav>
+    
     <!-- Hero Section -->
     <section id="inicio" class="min-h-screen flex items-center justify-center relative pt-16 sm:pt-20 grid-bg">
         <div class="absolute top-1/4 left-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-white rounded-full filter blur-[100px] sm:blur-[150px] opacity-10 floating"></div>
