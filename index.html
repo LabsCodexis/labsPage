@@ -1,1572 +1,590 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<!doctype html>
+<html lang="pt-BR" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Labs Codexis - Desenvolvimento Web Profissional</title>
-
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
+    <title>Labs Codexis | Desenvolvimento Web de Alto Padrão</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+    <script src="/_sdk/element_sdk.js"></script>
     <style>
         body {
             box-sizing: border-box;
         }
 
-        :root {
-            --primary-bg: #1e1e1e;
-            --secondary-bg: #252525;
-            --neon-green: #00ff6a;
-            --neon-green-dark: #00cc55;
-            --text-white: #ffffff;
-            --text-light: #cccccc;
-            --dark-gray: #333333;
-            --neon-glow: 0 0 20px rgba(0, 255, 106, 0.3);
-            --neon-glow-strong: 0 0 30px rgba(0, 255, 106, 0.6);
-            --neon-shadow: 0 4px 15px rgba(0, 255, 106, 0.2);
-        }
-
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: inherit;
+            font-family: 'Inter', sans-serif;
         }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--primary-bg);
-            color: var(--text-white);
-            line-height: 1.7;
-            overflow-x: hidden;
+        .font-display {
+            font-family: 'Space Grotesk', sans-serif;
         }
 
-        /* Custom Scrollbar */
+        .gradient-text {
+            background: linear-gradient(135deg, #ffffff 0%, #e5e5e5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .glow-line {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            height: 1px;
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .pulse-glow {
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(255, 255, 255, 0.5); }
+        }
+
+        .grid-bg {
+            background-image:
+                    linear-gradient(rgba(100, 100, 100, 0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(100, 100, 100, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00ff88 0%, #00dd00 100%);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #39ff14 0%, #00ff88 100%);
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(0, 255, 136, 0.5);
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+
+        .circuit-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.02;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .tech-icon {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .tech-icon:hover .glass-card {
+            transform: translateY(-8px);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 10px 40px rgba(255, 255, 255, 0.15);
+        }
+
+        .tech-icon:hover svg {
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+        }
+
         ::-webkit-scrollbar {
             width: 8px;
         }
 
         ::-webkit-scrollbar-track {
-            background: var(--primary-bg);
+            background: #000000;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: var(--neon-green);
+            background: linear-gradient(180deg, #ffffff, #888888);
             border-radius: 4px;
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--neon-green-dark);
-        }
-
-        /* Navbar Styles */
-        .navbar-custom {
-            background: rgba(30, 30, 30, 0.95) !important;
-            backdrop-filter: blur(15px);
-            border-bottom: 2px solid transparent;
-            transition: all 0.4s ease;
-            padding: 1rem 0;
-        }
-
-        .navbar-custom.scrolled {
-            background: rgba(30, 30, 30, 0.98) !important;
-            border-bottom-color: var(--neon-green);
-            box-shadow: var(--neon-glow);
-        }
-
-        .navbar-brand {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--text-white) !important;
-            text-decoration: none;
-        }
-
-        .navbar-brand .highlight {
-            color: var(--neon-green);
-            text-shadow: 0 0 15px var(--neon-green);
-            animation: neonPulse 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes neonPulse {
-            from { text-shadow: 0 0 15px var(--neon-green); }
-            to { text-shadow: 0 0 25px var(--neon-green), 0 0 35px var(--neon-green); }
-        }
-
-        .navbar-nav .nav-link {
-            color: var(--text-white) !important;
-            font-weight: 500;
-            font-size: 1.1rem;
-            margin: 0 1rem;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-
-        .navbar-nav .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--neon-green);
-            transition: width 0.3s ease;
-        }
-
-        .navbar-nav .nav-link:hover {
-            color: var(--neon-green) !important;
-            text-shadow: 0 0 10px var(--neon-green);
-        }
-
-        .navbar-nav .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .btn-neon {
-            background: linear-gradient(45deg, var(--neon-green), var(--neon-green-dark));
-            color: var(--primary-bg);
-            border: none;
-            padding: 0.8rem 2rem;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-neon::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn-neon:hover::before {
-            left: 100%;
-        }
-
-        .btn-neon:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--neon-glow-strong);
-            color: var(--primary-bg);
-        }
-
-        .navbar-toggler {
-            border: none;
-            padding: 0.25rem 0.5rem;
-        }
-
-        .navbar-toggler:focus {
-            box-shadow: none;
-        }
-
-        .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2800, 255, 106, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-        }
-
-        /* Hero Section */
-        .hero-section {
-            min-height: 100vh;
-            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 50%, var(--primary-bg) 100%);
-            display: flex;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-            padding-top: 100px;
-        }
-
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background:
-                    radial-gradient(circle at 20% 80%, rgba(0, 255, 106, 0.1) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 20%, rgba(0, 255, 106, 0.1) 0%, transparent 50%);
-            pointer-events: none;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero-title {
-            font-size: 4rem;
-            font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 2rem;
-            background: linear-gradient(135deg, var(--text-white) 0%, var(--neon-green) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-subtitle {
-            font-size: 1.4rem;
-            color: var(--text-light);
-            margin-bottom: 3rem;
-            line-height: 1.6;
-        }
-
-        .btn-primary-custom {
-            background: linear-gradient(45deg, var(--neon-green), var(--neon-green-dark));
-            color: var(--primary-bg);
-            border: none;
-            padding: 1.2rem 2.5rem;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.8rem;
-            margin-right: 1rem;
-        }
-
-        .btn-primary-custom::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn-primary-custom:hover::before {
-            left: 100%;
-        }
-
-        .btn-primary-custom:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--neon-glow-strong);
-            color: var(--primary-bg);
-        }
-
-        .btn-outline-custom {
-            background: transparent;
-            color: var(--neon-green);
-            border: 2px solid var(--neon-green);
-            padding: 1.2rem 2.5rem;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-outline-custom::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 100%;
-            background: var(--neon-green);
-            transition: width 0.3s ease;
-            z-index: -1;
-        }
-
-        .btn-outline-custom:hover::before {
-            width: 100%;
-        }
-
-        .btn-outline-custom:hover {
-            color: var(--primary-bg);
-            box-shadow: var(--neon-glow);
-        }
-
-        .hero-visual {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-
-        .tech-showcase {
-            position: relative;
-            width: 400px;
-            height: 400px;
-        }
-
-        .tech-icon {
-            background: linear-gradient(45deg, var(--neon-green), var(--neon-green-dark));
-            border-radius: 25px;
-            width: 300px;
-            height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: float 4s ease-in-out infinite;
-            box-shadow: var(--neon-glow-strong);
-            position: relative;
-            overflow: hidden;
-            margin: 0 auto;
-        }
-
-        .tech-icon::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-            animation: shine 3s linear infinite;
-        }
-
-        @keyframes shine {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .tech-icon i {
-            font-size: 6rem;
-            color: var(--primary-bg);
-            z-index: 1;
-            position: relative;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            25% { transform: translateY(-20px) rotate(2deg); }
-            50% { transform: translateY(-10px) rotate(0deg); }
-            75% { transform: translateY(-15px) rotate(-2deg); }
-        }
-
-        .floating-elements {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .floating-element {
-            position: absolute;
-            color: var(--neon-green);
-            opacity: 0.3;
-            animation: floatAround 8s linear infinite;
-            font-size: 2rem;
-        }
-
-        .floating-element:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
-        .floating-element:nth-child(2) { top: 20%; right: 10%; animation-delay: 2s; }
-        .floating-element:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 4s; }
-        .floating-element:nth-child(4) { bottom: 10%; right: 20%; animation-delay: 6s; }
-
-        @keyframes floatAround {
-            0%, 100% { transform: translateY(0px) translateX(0px); }
-            25% { transform: translateY(-30px) translateX(20px); }
-            50% { transform: translateY(-10px) translateX(-20px); }
-            75% { transform: translateY(-20px) translateX(10px); }
-        }
-
-        /* Section Styles */
-        .section-padding {
-            padding: 8rem 0;
-        }
-
-        .section-title {
-            font-size: 3.5rem;
-            font-weight: 800;
-            text-align: center;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, var(--text-white) 0%, var(--neon-green) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .section-subtitle {
-            font-size: 1.3rem;
-            color: var(--text-light);
-            text-align: center;
-            margin-bottom: 5rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .highlight {
-            color: var(--neon-green);
-            text-shadow: 0 0 20px var(--neon-green);
-        }
-
-        /* Services Section */
-        .services-section {
-            background: var(--secondary-bg);
-            position: relative;
-        }
-
-        .services-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background:
-                    radial-gradient(circle at 10% 20%, rgba(0, 255, 106, 0.05) 0%, transparent 50%),
-                    radial-gradient(circle at 90% 80%, rgba(0, 255, 106, 0.05) 0%, transparent 50%);
-            pointer-events: none;
-        }
-
-        .service-card {
-            background: var(--primary-bg);
-            border: 1px solid var(--dark-gray);
-            border-radius: 20px;
-            padding: 3rem 2rem;
-            text-align: center;
-            transition: all 0.4s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            height: 100%;
-        }
-
-        .service-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, transparent, rgba(0, 255, 106, 0.05), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .service-card:hover::before {
-            opacity: 1;
-        }
-
-        .service-card:hover {
-            transform: translateY(-15px);
-            box-shadow: var(--neon-glow-strong);
-            border-color: var(--neon-green);
-        }
-
-        .service-card i {
-            font-size: 4rem;
-            color: var(--neon-green);
-            margin-bottom: 2rem;
-            transition: all 0.3s ease;
-        }
-
-        .service-card:hover i {
-            transform: scale(1.1);
-            text-shadow: 0 0 20px var(--neon-green);
-        }
-
-        .service-card h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            font-weight: 700;
-        }
-
-        .service-card p {
-            color: var(--text-light);
-            margin-bottom: 2rem;
-            line-height: 1.6;
-            font-size: 1.1rem;
-        }
-
-        .btn-service {
-            background: transparent;
-            color: var(--neon-green);
-            border: 2px solid var(--neon-green);
-            padding: 1rem 2rem;
-            border-radius: 10px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-service::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 100%;
-            background: var(--neon-green);
-            transition: width 0.3s ease;
-            z-index: -1;
-        }
-
-        .btn-service:hover::before {
-            width: 100%;
-        }
-
-        .btn-service:hover {
-            color: var(--primary-bg);
-            box-shadow: var(--neon-glow);
-        }
-
-        /* Portfolio Section */
-        .portfolio-section {
-            background: var(--primary-bg);
-        }
-
-        .portfolio-item {
-            position: relative;
-            background: var(--secondary-bg);
-            border-radius: 20px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            border: 1px solid var(--dark-gray);
-            height: 100%;
-        }
-
-        .portfolio-item:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--neon-glow-strong);
-            border-color: var(--neon-green);
-        }
-
-        .portfolio-image {
-            height: 250px;
-            background: linear-gradient(45deg, var(--secondary-bg), var(--primary-bg));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .portfolio-image::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, transparent, rgba(0, 255, 106, 0.1), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .portfolio-item:hover .portfolio-image::before {
-            opacity: 1;
-        }
-
-        .portfolio-image i {
-            font-size: 5rem;
-            color: var(--neon-green);
-            transition: all 0.3s ease;
-        }
-
-        .portfolio-item:hover .portfolio-image i {
-            transform: scale(1.2);
-            text-shadow: 0 0 30px var(--neon-green);
-        }
-
-        .portfolio-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.95);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: all 0.4s ease;
-            padding: 2rem;
-            text-align: center;
-        }
-
-        .portfolio-item:hover .portfolio-overlay {
-            opacity: 1;
-        }
-
-        .portfolio-overlay h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            color: var(--neon-green);
-        }
-
-        .portfolio-overlay p {
-            color: var(--text-light);
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-
-        .portfolio-content {
-            padding: 2rem;
-        }
-
-        .portfolio-content h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.8rem;
-            font-weight: 700;
-        }
-
-        .portfolio-content p {
-            color: var(--text-light);
-            font-size: 1rem;
-        }
-
-        /* About Section */
-        .about-section {
-            background: var(--secondary-bg);
-            position: relative;
-        }
-
-        .about-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background:
-                    radial-gradient(circle at 30% 40%, rgba(0, 255, 106, 0.05) 0%, transparent 50%),
-                    radial-gradient(circle at 70% 60%, rgba(0, 255, 106, 0.05) 0%, transparent 50%);
-            pointer-events: none;
-        }
-
-        .about-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .about-title {
-            font-size: 3rem;
-            margin-bottom: 2rem;
-            font-weight: 800;
-        }
-
-        .about-text {
-            font-size: 1.2rem;
-            color: var(--text-light);
-            margin-bottom: 2rem;
-            line-height: 1.7;
-        }
-
-        .features-list {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 3rem;
-        }
-
-        .features-list li {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-        }
-
-        .features-list li:hover {
-            color: var(--neon-green);
-            transform: translateX(10px);
-        }
-
-        .features-list i {
-            color: var(--neon-green);
-            margin-right: 1.5rem;
-            font-size: 1.5rem;
-            text-shadow: 0 0 10px var(--neon-green);
-        }
-
-        .about-visual {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-
-        /* Contact Section */
-        .contact-section {
-            background: var(--primary-bg);
-        }
-
-        .contact-item {
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .contact-item:hover {
-            transform: translateY(-10px);
-        }
-
-        .contact-btn {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: none;
-            font-size: 2.5rem;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: auto;
-            margin-right: auto;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .contact-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 50%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .contact-btn:hover::before {
-            opacity: 1;
-        }
-
-        .contact-btn.whatsapp {
-            background: linear-gradient(45deg, #25D366, #128C7E);
-            color: white;
-        }
-
-        .contact-btn.instagram {
-            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-            color: white;
-        }
-
-        .contact-btn.email {
-            background: linear-gradient(45deg, var(--neon-green), var(--neon-green-dark));
-            color: var(--primary-bg);
-        }
-
-        .contact-btn:hover {
-            transform: translateY(-8px) scale(1.1);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        .contact-item h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-
-        .contact-item p {
-            color: var(--text-light);
-            font-size: 1.1rem;
-        }
-
-        /* Footer */
-        .footer {
-            background: #0d0d0d;
-            padding: 4rem 0 2rem;
-            border-top: 1px solid var(--dark-gray);
-        }
-
-        .footer h5 {
-            margin-bottom: 1.5rem;
-            font-size: 1.3rem;
-            font-weight: 700;
-        }
-
-        .footer .highlight {
-            color: var(--neon-green);
-            text-shadow: 0 0 10px var(--neon-green);
-        }
-
-        .footer p,
-        .footer a {
-            color: var(--text-light);
-            text-decoration: none;
-            margin-bottom: 0.8rem;
-            display: block;
-            transition: all 0.3s ease;
-        }
-
-        .footer a:hover {
-            color: var(--neon-green);
-            transform: translateX(5px);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .social-links a {
-            width: 50px;
-            height: 50px;
-            background: var(--neon-green);
-            color: var(--primary-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-            font-size: 1.2rem;
-        }
-
-        .social-links a:hover {
-            transform: translateY(-5px) scale(1.1);
-            box-shadow: var(--neon-glow);
-        }
-
-        .footer-bottom {
-            border-top: 1px solid var(--dark-gray);
-            padding-top: 2rem;
-            margin-top: 3rem;
-            text-align: center;
-            color: var(--text-light);
-        }
-
-        /* Animations */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: all 0.8s ease;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .slide-in-left {
-            opacity: 0;
-            transform: translateX(-50px);
-            transition: all 0.8s ease;
-        }
-
-        .slide-in-left.visible {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .slide-in-right {
-            opacity: 0;
-            transform: translateX(50px);
-            transition: all 0.8s ease;
-        }
-
-        .slide-in-right.visible {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .scale-in {
-            opacity: 0;
-            transform: scale(0.8);
-            transition: all 0.8s ease;
-        }
-
-        .scale-in.visible {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        /* Responsive Adjustments */
         @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2.5rem;
-            }
-
-            .section-title {
-                font-size: 2.5rem;
-            }
-
-            .tech-showcase {
-                width: 300px;
-                height: 300px;
-            }
-
-            .tech-icon {
-                width: 250px;
-                height: 250px;
-            }
-
-            .tech-icon i {
-                font-size: 4rem;
-            }
-
-            .section-padding {
-                padding: 5rem 0;
-            }
-
-            .floating-element {
-                font-size: 1.5rem;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .hero-title {
-                font-size: 2rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1.2rem;
-            }
-
-            .btn-primary-custom,
-            .btn-outline-custom {
-                padding: 1rem 1.5rem;
-                font-size: 1rem;
-                margin-bottom: 1rem;
-                display: block;
-                text-align: center;
-            }
-
-            .tech-showcase {
-                width: 250px;
-                height: 250px;
-            }
-
-            .tech-icon {
-                width: 200px;
-                height: 200px;
-            }
-
-            .tech-icon i {
-                font-size: 3rem;
-            }
-        }
-
-        /* Loading Animation */
-        .loading {
-            opacity: 0;
-            animation: fadeInUp 1s ease forwards;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Ripple Effect */
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(0);
-            animation: ripple-animation 0.6s linear;
-            pointer-events: none;
-        }
-
-        @keyframes ripple-animation {
-            to {
-                transform: scale(4);
-                opacity: 0;
+            .font-display {
+                letter-spacing: -0.02em;
             }
         }
     </style>
-</head>
-<body>
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top navbar-custom" id="navbar">
-    <div class="container">
-        <a class="navbar-brand" href="#hero">
-            <span class="highlight">Labs</span> Codexis
-        </a>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto me-4">
-                <li class="nav-item">
-                    <a class="nav-link" href="#servicos">Serviços</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#portfolio">Portfólio</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#sobre">Sobre</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#contato">Contato</a>
-                </li>
-            </ul>
-            <a href="#" class="btn-neon" onclick="openWhatsApp('Olá! Gostaria de solicitar um orçamento para desenvolvimento web. Vim através do site da Labs Codexis.')">
-                Solicitar Orçamento
-            </a>
-        </div>
-    </div>
-</nav>
-
-<!-- Hero Section -->
-<section class="hero-section" id="hero">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <div class="hero-content loading">
-                    <h1 class="hero-title">Transformamos suas <span class="highlight">ideias</span> em soluções digitais</h1>
-                    <p class="hero-subtitle">Desenvolvimento web moderno, rápido e otimizado para seu negócio crescer no mundo digital com tecnologia de ponta</p>
-                    <div class="d-flex flex-wrap">
-                        <a href="#" class="btn-primary-custom" onclick="openWhatsApp('Olá! Quero desenvolver meu site com a Labs Codexis. Vim através do site de vocês.')">
-                            <i class="fab fa-whatsapp"></i>
-                            Começar Projeto
-                        </a>
-                        <a href="#portfolio" class="btn-outline-custom">Ver Portfólio</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="hero-visual loading">
-                    <div class="tech-showcase">
-                        <div class="tech-icon">
-                            <i class="fas fa-code"></i>
-                        </div>
-                        <div class="floating-elements">
-                            <div class="floating-element"><i class="fas fa-laptop-code"></i></div>
-                            <div class="floating-element"><i class="fas fa-mobile-alt"></i></div>
-                            <div class="floating-element"><i class="fas fa-rocket"></i></div>
-                            <div class="floating-element"><i class="fas fa-cogs"></i></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Serviços -->
-<section class="services-section section-padding" id="servicos">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <h2 class="section-title fade-in">Nossos <span class="highlight">Serviços</span></h2>
-                <p class="section-subtitle fade-in">Soluções completas e inovadoras para transformar sua presença digital</p>
-            </div>
-        </div>
-        <div class="row g-4">
-            <div class="col-lg-3 col-md-6">
-                <div class="service-card fade-in" onclick="openWhatsApp('Olá! Tenho interesse no serviço de Desenvolvimento Web da Labs Codexis.')">
-                    <i class="fas fa-laptop-code"></i>
-                    <h3>Desenvolvimento Web</h3>
-                    <p>Sites modernos, responsivos e otimizados com as mais avançadas tecnologias do mercado para garantir performance excepcional</p>
-                    <a href="#" onclick="openWhatsApp('Olá! Vim através do site da Labs Codexis')" class="btn-service">Saiba Mais</a>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="service-card fade-in" onclick="openWhatsApp('Olá! Tenho interesse no serviço de SEO e Otimização da Labs Codexis.')">
-                    <i class="fas fa-chart-line"></i>
-                    <h3>SEO e Otimização</h3>
-                    <p>Estratégias avançadas de SEO e otimização de performance para posicionar seu site no topo dos resultados de busca</p>
-                    <a href="#" onclick="openWhatsApp('Olá! Vim através do site da Labs Codexis')" class="btn-service">Saiba Mais</a>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="service-card fade-in" onclick="openWhatsApp('Olá! Tenho interesse no serviço de Design Responsivo da Labs Codexis.')">
-                    <i class="fas fa-mobile-alt"></i>
-                    <h3>Design Responsivo</h3>
-                    <p>Layouts inteligentes que se adaptam perfeitamente a todos os dispositivos, garantindo experiência única em qualquer tela</p>
-                    <a href="#" onclick="openWhatsApp('Olá! Vim através do site da Labs Codexis')" class="btn-service">Saiba Mais</a>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="service-card fade-in" onclick="openWhatsApp('Olá! Tenho interesse no serviço de Manutenção de Sites da Labs Codexis.')">
-                    <i class="fas fa-tools"></i>
-                    <h3>Manutenção de Sites</h3>
-                    <p>Suporte técnico contínuo, atualizações de segurança e monitoramento 24/7 para manter seu site sempre funcionando</p>
-                    <a href="#" onclick="openWhatsApp('Olá! Vim através do site da Labs Codexis')" class="btn-service">Saiba Mais</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Portfólio -->
-<section class="portfolio-section section-padding" id="portfolio">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <h2 class="section-title fade-in">Nosso <span class="highlight">Portfólio</span></h2>
-                <p class="section-subtitle fade-in">Projetos inovadores que transformaram negócios e impulsionaram resultados</p>
-            </div>
-        </div>
-        <div class="row g-4">
-            <div class="col-lg-4 col-md-6">
-                <div class="portfolio-item scale-in" onclick="openWhatsApp('Olá! Gostaria de um projeto similar ao E-commerce Moderno da Labs Codexis.')">
-                    <div class="portfolio-image">
-                        <i class="fas fa-shopping-cart"></i>
-                        <div class="portfolio-overlay">
-                            <h3>E-commerce Moderno</h3>
-                            <p>Loja virtual completa com sistema de pagamento integrado, gestão de estoque e painel administrativo avançado</p>
-                            <a href="#" class="btn-primary-custom">Solicitar Similar</a>
-                        </div>
-                    </div>
-                    <div class="portfolio-content">
-                        <h3>E-commerce Moderno</h3>
-                        <p>Loja virtual completa com alta conversão</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="portfolio-item scale-in" onclick="openWhatsApp('Olá! Gostaria de um projeto similar à Landing Page Corporativa da Labs Codexis.')">
-                    <div class="portfolio-image">
-                        <i class="fas fa-building"></i>
-                        <div class="portfolio-overlay">
-                            <h3>Landing Page Corporativa</h3>
-                            <p>Site institucional estratégico com foco em conversão, otimizado para gerar leads qualificados</p>
-                            <a href="#" class="btn-primary-custom">Solicitar Similar</a>
-                        </div>
-                    </div>
-                    <div class="portfolio-content">
-                        <h3>Landing Page Corporativa</h3>
-                        <p>Site institucional focado em resultados</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="portfolio-item scale-in" onclick="openWhatsApp('Olá! Gostaria de um projeto similar ao Sistema Web Personalizado da Labs Codexis.')">
-                    <div class="portfolio-image">
-                        <i class="fas fa-cogs"></i>
-                        <div class="portfolio-overlay">
-                            <h3>Sistema Web Personalizado</h3>
-                            <p>Aplicação web sob medida para gestão empresarial com dashboard inteligente e automações</p>
-                            <a href="#" class="btn-primary-custom">Solicitar Similar</a>
-                        </div>
-                    </div>
-                    <div class="portfolio-content">
-                        <h3>Sistema Web Personalizado</h3>
-                        <p>Aplicação sob medida para sua empresa</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="portfolio-item scale-in" onclick="openWhatsApp('Olá! Gostaria de um projeto similar ao Blog Profissional da Labs Codexis.')">
-                    <div class="portfolio-image">
-                        <i class="fas fa-blog"></i>
-                        <div class="portfolio-overlay">
-                            <h3>Blog Profissional</h3>
-                            <p>Plataforma de conteúdo otimizada para SEO com sistema de gerenciamento intuitivo</p>
-                            <a href="#" class="btn-primary-custom">Solicitar Similar</a>
-                        </div>
-                    </div>
-                    <div class="portfolio-content">
-                        <h3>Blog Profissional</h3>
-                        <p>Plataforma otimizada para SEO</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="portfolio-item scale-in" onclick="openWhatsApp('Olá! Gostaria de um projeto similar ao App Web Responsivo da Labs Codexis.')">
-                    <div class="portfolio-image">
-                        <i class="fas fa-mobile-alt"></i>
-                        <div class="portfolio-overlay">
-                            <h3>App Web Responsivo</h3>
-                            <p>Aplicação web progressiva que oferece experiência nativa em todos os dispositivos</p>
-                            <a href="#" class="btn-primary-custom">Solicitar Similar</a>
-                        </div>
-                    </div>
-                    <div class="portfolio-content">
-                        <h3>App Web Responsivo</h3>
-                        <p>Experiência nativa em qualquer dispositivo</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="portfolio-item scale-in" onclick="openWhatsApp('Olá! Gostaria de um projeto similar ao Portal de Notícias da Labs Codexis.')">
-                    <div class="portfolio-image">
-                        <i class="fas fa-newspaper"></i>
-                        <div class="portfolio-overlay">
-                            <h3>Portal de Notícias</h3>
-                            <p>Portal completo com sistema de gerenciamento de conteúdo, categorias e área de comentários</p>
-                            <a href="#" class="btn-primary-custom">Solicitar Similar</a>
-                        </div>
-                    </div>
-                    <div class="portfolio-content">
-                        <h3>Portal de Notícias</h3>
-                        <p>Sistema de gerenciamento completo</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Sobre -->
-<section class="about-section section-padding" id="sobre">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <div class="about-content slide-in-left">
-                    <h2 class="about-title">Sobre a <span class="highlight">Labs Codexis</span></h2>
-                    <p class="about-text">Somos uma empresa de desenvolvimento web especializada em criar soluções digitais inovadoras e de alta performance. Nossa missão é transformar ideias em realidade digital, impulsionando o crescimento dos nossos clientes.</p>
-                    <p class="about-text">Mesmo sendo uma empresa jovem, a Labs Codexis se destaca pela dedicação, inovação e qualidade em cada projeto. Unimos conhecimento técnico e criatividade para desenvolver soluções que entregam resultados reais e ajudam nossos clientes a crescer no ambiente digital.</p>
-                    <ul class="features-list">
-                        <li><i class="fas fa-rocket"></i> Tecnologias modernas e atualizadas</li>
-                        <li><i class="fas fa-headset"></i> Suporte técnico especializado 24/7</li>
-                        <li><i class="fas fa-clock"></i> Projetos entregues rigorosamente no prazo</li>
-                        <li><i class="fas fa-chart-bar"></i> Foco em performance e resultados</li>
-                        <li><i class="fas fa-shield-alt"></i> Segurança e qualidade garantidas</li>
-                    </ul>
-                    <a href="#" class="btn-primary-custom" onclick="openWhatsApp('Olá! Gostaria de conhecer mais sobre a Labs Codexis e seus serviços.')">
-                        <i class="fas fa-comments"></i>
-                        Fale Conosco
-                    </a>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="about-visual slide-in-right">
-                    <div class="tech-icon">
-                        <i class="fas fa-laptop-code"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Contato -->
-<section class="contact-section section-padding" id="contato">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <h2 class="section-title fade-in">Entre em <span class="highlight">Contato</span></h2>
-                <p class="section-subtitle fade-in">Vamos conversar sobre seu próximo projeto e transformar suas ideias em realidade</p>
-            </div>
-        </div>
-        <div class="row g-4 justify-content-center">
-            <div class="col-lg-4 col-md-6">
-                <div class="contact-item scale-in">
-                    <button class="contact-btn whatsapp" onclick="openWhatsApp('Olá! Vim através do site da Labs Codexis e gostaria de mais informações sobre desenvolvimento web.')">
-                        <i class="fab fa-whatsapp"></i>
-                    </button>
-                    <h3>WhatsApp</h3>
-                    <p>Resposta rápida e atendimento personalizado para seu projeto</p>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="contact-item scale-in">
-                    <button class="contact-btn instagram" onclick="openInstagram()">
-                        <i class="fab fa-instagram"></i>
-                    </button>
-                    <h3>Instagram</h3>
-                    <p>Siga-nos para ver nossos projetos e novidades</p>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="contact-item scale-in">
-                    <button class="contact-btn email" onclick="openEmail()">
-                        <i class="fas fa-envelope"></i>
-                    </button>
-                    <h3>E-mail</h3>
-                    <p>Contato direto e profissional para propostas detalhadas</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Footer -->
-<footer class="footer">
-    <div class="container">
-        <div class="row g-4">
-            <div class="col-lg-3 col-md-6">
-                <h5><span class="highlight">Labs</span> Codexis</h5>
-                <p>Transformando ideias em soluções digitais inovadoras desde 2020. Especialistas em desenvolvimento web de alta performance.</p>
-                <div class="social-links">
-                    <a href="#" onclick="openWhatsApp('Olá! Vim através do site da Labs Codexis')" title="WhatsApp">
-                        <i class="fab fa-whatsapp"></i>
-                    </a>
-                    <a href="#" onclick="openInstagram()" title="Instagram">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a href="#" onclick="openEmail()" title="E-mail">
-                        <i class="fas fa-envelope"></i>
-                    </a>
-<!--                    <a href="#" onclick="openLinkedIn()" title="LinkedIn">-->
-<!--                        <i class="fab fa-linkedin-in"></i>-->
-<!--                    </a>-->
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <h5>Serviços</h5>
-                <a href="#servicos">Desenvolvimento Web</a>
-                <a href="#servicos">SEO e Otimização</a>
-                <a href="#servicos">Design Responsivo</a>
-                <a href="#servicos">Manutenção de Sites</a>
-                <a href="#servicos">Consultoria Digital</a>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <h5>Links Rápidos</h5>
-                <a href="#portfolio">Portfólio</a>
-                <a href="#sobre">Sobre Nós</a>
-                <a href="#">Política de Privacidade</a>
-                <a href="#">Termos de Serviço</a>
-                <a href="#">FAQ</a>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <h5>Contato</h5>
-                <p><i class="fas fa-envelope"></i> labscodexis@gmail.com</p>
-                <p><i class="fas fa-phone"></i> (91) 98456-9545</p>
-                <p><i class="fas fa-map-marker-alt"></i> Ananindeua, PA - Brasil</p>
-                <p><i class="fas fa-clock"></i> Seg-Sex: 9h às 18h</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-                                                    <p>&copy;Labs Codexis. Todos os direitos reservados. Desenvolvido com 💚 pela nossa equipe.</p>
-        </div>
-    </div>
-</footer>
-
-<!-- Bootstrap 5 JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-<script>
-
-const year = new Date().getFullYear();
-document.querySelector('.footer-bottom p').innerHTML =
-`&copy; ${year} Labs Codexis. Todos os direitos reservados. Desenvolvido com 💚 pela nossa equipe.`;
-
-
-// Navbar scroll effect
-    window.addEventListener('scroll', function() {
-        const navbar = document.getElementById('navbar');
-        if (window.scrollY > 100) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
+    
+    
+    <style>
+        .tech-card {
+            background: #0f0f0f;
+            border-radius: 16px;
+            padding: 20px;
+            width: 140px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            transition: transform .3s ease, box-shadow .3s ease;
         }
+
+        .tech-card:hover {
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: 0 0 25px rgba(255,255,255,.15);
+        }
+
+        .tech-icon {
+            width: 56px;
+            height: 56px;
+            object-fit: contain;
+        }
+
+        .tech-name {
+            font-size: 0.9rem;
+            color: #e5e7eb;
+            font-weight: 500;
+            text-align: center;
+        }
+    </style>
+    
+    
+    
+    
+    
+    <style>@view-transition { navigation: auto; }</style>
+    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+</head>
+<body class="h-full bg-black text-gray-100 overflow-x-hidden">
+<div id="app-wrapper" class="w-full h-full overflow-auto">
+    <div class="circuit-pattern pointer-events-none fixed inset-0"></div><!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-card">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-white to-gray-300 flex items-center justify-center pulse-glow">
+                        <svg class="w-4 h-4 sm:w-6 sm:h-6 text-black" fill="none" stroke="currentColor" viewbox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                        </svg>
+                    </div><span class="font-display font-bold text-base sm:text-xl tracking-tight">Labs <span class="gradient-text">Codexis</span></span>
+                </div>
+                <div class="hidden md:flex items-center gap-6 lg:gap-8"><a href="#inicio" class="text-gray-400 hover:text-white transition-colors text-sm font-medium">Início</a> <a href="#servicos" class="text-gray-400 hover:text-white transition-colors text-sm font-medium">Serviços</a> <a href="#sobre" class="text-gray-400 hover:text-white transition-colors text-sm font-medium">Sobre</a> <a href="#contato" class="text-gray-400 hover:text-white transition-colors text-sm font-medium">Contato</a>
+                </div><a href="#contato" class="bg-white hover:bg-gray-200 px-3 py-2 sm:px-5 sm:py-2.5 rounded-lg text-black font-semibold text-xs sm:text-sm transition-all" id="nav-cta"> Fale Conosco </a>
+            </div>
+        </div>
+    </nav>
+    <!-- Hero Section -->
+    <section id="inicio" class="min-h-screen flex items-center justify-center relative pt-16 sm:pt-20 grid-bg">
+        <div class="absolute top-1/4 left-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-white rounded-full filter blur-[100px] sm:blur-[150px] opacity-10 floating"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-48 h-48 sm:w-80 sm:h-80 bg-gray-300 rounded-full filter blur-[80px] sm:blur-[120px] opacity-10 floating" style="animation-delay: -3s;"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20 text-center relative z-10">
+            <div class="fade-in stagger-1 opacity-0">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full glass-card mb-6 sm:mb-8"><span class="w-2 h-2 bg-white rounded-full animate-pulse"></span> <span class="text-xs sm:text-sm text-gray-400">Transformando ideias em soluções digitais</span>
+                </div>
+            </div>
+            <h1 class="font-display text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold mb-4 sm:mb-6 fade-in stagger-2 opacity-0 leading-tight" id="hero-title">Labs <span class="gradient-text">Codexis</span></h1>
+            <p class="text-lg sm:text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto mb-6 sm:mb-10 px-4 fade-in stagger-3 opacity-0" id="hero-subtitle">Desenvolvimento Web de Alto Padrão</p>
+            <p class="text-sm sm:text-base text-gray-500 max-w-xl mx-auto mb-8 sm:mb-12 px-4 fade-in stagger-3 opacity-0">Criamos sistemas web personalizados que elevam o seu negócio ao próximo nível. Tecnologia de ponta com design sofisticado.</p>
+            <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4 fade-in stagger-4 opacity-0"><a href="#contato" class="bg-white hover:bg-gray-200 px-6 py-3 sm:px-8 sm:py-4 rounded-xl text-black font-semibold text-base sm:text-lg transition-all" id="cta-button"> Solicitar Orçamento </a> <a href="#servicos" class="px-6 py-3 sm:px-8 sm:py-4 rounded-xl border border-white/30 text-white font-semibold text-base sm:text-lg hover:bg-white/10 transition-all"> Nossos Serviços </a>
+            </div>
+            <!-- Tech Stack Icons -->
+            <div class="mt-12 sm:mt-20 fade-in stagger-4 opacity-0">
+                <p class="text-gray-600 text-xs sm:text-sm mb-4 sm:mb-6 uppercase tracking-widest">Stack Tecnológica</p>
+                <div class="flex flex-wrap justify-center gap-6 sm:gap-8 lg:gap-12 items-center px-4">
+                    
+                    <!-- Laravel -->
+                    <div class="tech-card">
+                        <img class="tech-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-original.svg" alt="Laravel">
+                        <span class="tech-name">Laravel</span>
+                    </div>
+                    
+                    <!-- Vue.js -->
+                    <div class="tech-card">
+                        <img class="tech-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg" alt="Vue.js">
+                        <span class="tech-name">Vue.js</span>
+                    </div>
+                    
+                    <!-- Vuetify -->
+                    <div class="tech-card">
+                        <img class="tech-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuetify/vuetify-original.svg" alt="Vuetify">
+                        <span class="tech-name">Vuetify</span>
+                    </div>
+                    
+                    <!-- TypeScript -->
+                    <div class="tech-card"> <img class="tech-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" alt="TypeScript">
+                    <span class="tech-name">TypeScript</span>
+                    </div>
+                    
+                    <!-- Docker -->
+                    <div class="tech-card">
+                        <img class="tech-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="Docker">
+                        <span class="tech-name">Docker</span>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+        </div>
+        
+    </section>
+    <!-- Services Section -->
+    <section id="servicos" class="py-12 sm:py-16 md:py-24 relative">
+        <div class="glow-line w-full mb-8 sm:mb-12 md:mb-16"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-8 sm:mb-12 md:mb-16">
+                <span class="text-white text-xs sm:text-sm font-semibold uppercase tracking-widest">O que oferecemos</span>
+                <h2 class="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mt-3 sm:mt-4 mb-4 sm:mb-6">
+                    Nossos
+                    <span class="gradient-text">Serviços</span>
+                </h2>
+                <p class="text-sm sm:text-base text-gray-400 max-w-2xl mx-auto px-4">Soluções completas em desenvolvimento web para transformar sua presença digital</p>
+            </div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+                <!-- Service Card 1 -->
+                <div class="service-card glass-card rounded-2xl p-6 sm:p-8 transition-all duration-300">
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-white/20 to-transparent flex items-center justify-center mb-4 sm:mb-6">
+                        <svg class="w-6 h-6 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-display text-lg sm:text-xl font-semibold mb-2 sm:mb-3">Websites Institucionais</h3>
+                    <p class="text-gray-400 text-xs sm:text-sm leading-relaxed">Sites profissionais que representam sua marca com elegância e sofisticação, otimizados para conversão.</p>
+                </div><!-- Service Card 2 -->
+                <div class="service-card glass-card rounded-2xl p-6 sm:p-8 transition-all duration-300">
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-white/20 to-transparent flex items-center justify-center mb-4 sm:mb-6">
+                        <svg class="w-6 h-6 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                    </div>
+                    <h3 class="font-display text-lg sm:text-xl font-semibold mb-2 sm:mb-3">Sistemas Web</h3>
+                    <p class="text-gray-400 text-xs sm:text-sm leading-relaxed">Aplicações web robustas e escaláveis, desenvolvidas sob medida para automatizar e otimizar seus processos.</p>
+                </div><!-- Service Card 3 -->
+                <div class="service-card glass-card rounded-2xl p-6 sm:p-8 transition-all duration-300">
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-white/20 to-transparent flex items-center justify-center mb-4 sm:mb-6">
+                        <svg class="w-6 h-6 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-display text-lg sm:text-xl font-semibold mb-2 sm:mb-3">Design Responsivo</h3>
+                    <p class="text-gray-400 text-xs sm:text-sm leading-relaxed">Interfaces que se adaptam perfeitamente a qualquer dispositivo, garantindo a melhor experiência ao usuário.</p>
+                </div><!-- Service Card 4 -->
+                <div class="service-card glass-card rounded-2xl p-6 sm:p-8 transition-all duration-300">
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-white/20 to-transparent flex items-center justify-center mb-4 sm:mb-6">
+                        <svg class="w-6 h-6 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-display text-lg sm:text-xl font-semibold mb-2 sm:mb-3">E-commerce</h3>
+                    <p class="text-gray-400 text-xs sm:text-sm leading-relaxed">Lojas virtuais completas com gestão de produtos, pagamentos integrados e experiência de compra premium.</p>
+                </div><!-- Service Card 5 -->
+                <div class="service-card glass-card rounded-2xl p-6 sm:p-8 transition-all duration-300">
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-white/20 to-transparent flex items-center justify-center mb-4 sm:mb-6">
+                        <svg class="w-6 h-6 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-display text-lg sm:text-xl font-semibold mb-2 sm:mb-3">Landing Pages</h3>
+                    <p class="text-gray-400 text-xs sm:text-sm leading-relaxed">Páginas de alta conversão focadas em resultados, perfeitas para campanhas e lançamentos.</p>
+                </div><!-- Service Card 6 -->
+                <div class="service-card glass-card rounded-2xl p-6 sm:p-8 transition-all duration-300">
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-white/20 to-transparent flex items-center justify-center mb-4 sm:mb-6">
+                        <svg class="w-6 h-6 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-display text-lg sm:text-xl font-semibold mb-2 sm:mb-3">Otimização &amp; SEO</h3>
+                    <p class="text-gray-400 text-xs sm:text-sm leading-relaxed">Performance de alto nível e estratégias de SEO para seu site alcançar o topo dos buscadores.</p>
+                </div>
+            </div>
+        </div>
+    </section><!-- About Section -->
+    <section id="sobre" class="py-12 sm:py-16 md:py-24 relative">
+        <div class="glow-line w-full mb-8 sm:mb-12 md:mb-16"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
+                <div><span class="text-white text-xs sm:text-sm font-semibold uppercase tracking-widest">Nossa História</span>
+                    <h2 class="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mt-3 sm:mt-4 mb-4 sm:mb-6" id="about-title">Quem <span class="gradient-text">Somos</span></h2>
+                    <p class="text-sm sm:text-base text-gray-400 mb-4 sm:mb-6 leading-relaxed">A <strong class="text-white">Labs Codexis</strong> nasceu em outubro de 2025 com uma missão clara: transformar ideias em soluções digitais de alto padrão. Somos uma empresa jovem, mas com uma visão ambiciosa de revolucionar o mercado de desenvolvimento web.</p>
+                    <p class="text-sm sm:text-base text-gray-400 mb-6 sm:mb-8 leading-relaxed">Combinamos tecnologia de ponta com design sofisticado para criar experiências digitais que não apenas funcionam perfeitamente, mas que encantam e convertem. Cada projeto é tratado com dedicação exclusiva e atenção aos mínimos detalhes.</p>
+                    <div class="grid grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                        <div class="text-center">
+                            <div class="font-display text-2xl sm:text-3xl font-bold gradient-text">
+                                100%
+                            </div>
+                            <div class="text-gray-500 text-xs sm:text-sm mt-1">
+                                Dedicação
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <div class="font-display text-2xl sm:text-3xl font-bold gradient-text">
+                                24h
+                            </div>
+                            <div class="text-gray-500 text-xs sm:text-sm mt-1">
+                                Suporte
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <div class="font-display text-2xl sm:text-3xl font-bold gradient-text">
+                                ∞
+                            </div>
+                            <div class="text-gray-500 text-xs sm:text-sm mt-1">
+                                Inovação
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- Founder Card -->
+                <div class="glass-card rounded-2xl sm:rounded-3xl p-6 sm:p-8 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-white rounded-full filter blur-[60px] sm:blur-[80px] opacity-10"></div>
+                    <div class="flex items-start gap-4 sm:gap-6 mb-4 sm:mb-6">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl bg-gradient-to-br from-white to-gray-300 flex items-center justify-center text-2xl sm:text-3xl font-display font-bold text-black flex-shrink-0">
+                            MG
+                        </div>
+                        <div>
+                            <h3 class="font-display text-xl sm:text-2xl font-bold" id="founder-name">Matheus Gonçalves</h3>
+                            <p class="text-white font-medium text-sm sm:text-base">Fundador &amp; CEO</p>
+                            <p class="text-gray-500 text-xs sm:text-sm mt-1">21 anos • Belém, PA</p>
+                        </div>
+                    </div>
+                    <p class="text-sm sm:text-base text-gray-400 leading-relaxed mb-4 sm:mb-6">"Nascido em 06/03/2005, iniciei minha jornada na programação em janeiro de 2024, quando comecei o curso de Análise e Desenvolvimento de Sistemas na UNAMA. A Labs Codexis é a realização do meu sonho de ser um programador dono do próprio negócio."</p>
+                    <div class="flex items-center gap-3 sm:gap-4 pt-3 sm:pt-4 border-t border-white/20"><span class="text-gray-500 text-xs sm:text-sm">Formação:</span> <span class="px-2 py-1 sm:px-3 rounded-full bg-white/10 text-white text-xs sm:text-sm font-medium">ADS - UNAMA</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><!-- Contact Section -->
+    <section id="contato" class="py-12 sm:py-16 md:py-24 relative">
+        <div class="glow-line w-full mb-8 sm:mb-12 md:mb-16"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-8 sm:mb-12 md:mb-16"><span class="text-white text-xs sm:text-sm font-semibold uppercase tracking-widest">Vamos conversar</span>
+                <h2 class="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mt-3 sm:mt-4 mb-4 sm:mb-6">Entre em <span class="gradient-text">Contato</span></h2>
+                <p class="text-sm sm:text-base text-gray-400 max-w-2xl mx-auto px-4">Pronto para elevar seu negócio ao próximo nível? Fale conosco e vamos transformar sua visão em realidade.</p>
+            </div>
+            <div class="grid lg:grid-cols-2 gap-8 sm:gap-12"><!-- Contact Info -->
+                <div class="space-y-6 sm:space-y-8">
+                    <div class="glass-card rounded-xl sm:rounded-2xl p-5 sm:p-6 flex items-center gap-4 sm:gap-5 hover:border-white/40 transition-colors">
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl bg-gradient-to-br from-white to-gray-300 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-black" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 text-xs sm:text-sm mb-1">WhatsApp</p><a href="https://wa.me/5591985399924" target="_blank" rel="noopener noreferrer" class="font-display text-lg sm:text-xl font-semibold hover:text-white transition-colors">(91) 98539-9924</a>
+                        </div>
+                    </div>
+                    <div class="glass-card rounded-xl sm:rounded-2xl p-5 sm:p-6 flex items-center gap-4 sm:gap-5 hover:border-white/40 transition-colors">
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl bg-gradient-to-br from-white to-gray-300 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-black" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 text-xs sm:text-sm mb-1">Instagram</p><a href="https://instagram.com/labscodexis" target="_blank" rel="noopener noreferrer" class="font-display text-lg sm:text-xl font-semibold hover:text-white transition-colors">@labscodexis</a>
+                        </div>
+                    </div>
+                    <div class="glass-card rounded-xl sm:rounded-2xl p-5 sm:p-6">
+                        <h3 class="font-display text-base sm:text-lg font-semibold mb-3 sm:mb-4">Por que nos escolher?</h3>
+                        <ul class="space-y-2 sm:space-y-3">
+                            <li class="flex items-center gap-3 text-gray-400 text-xs sm:text-sm">
+                                <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white flex-shrink-0" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                </svg><span>Código limpo e bem documentado</span></li>
+                            <li class="flex items-center gap-3 text-gray-400 text-xs sm:text-sm">
+                                <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white flex-shrink-0" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                </svg><span>Design moderno e responsivo</span></li>
+                            <li class="flex items-center gap-3 text-gray-400 text-xs sm:text-sm">
+                                <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white flex-shrink-0" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                </svg><span>Suporte dedicado pós-entrega</span></li>
+                            <li class="flex items-center gap-3 text-gray-400 text-xs sm:text-sm">
+                                <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white flex-shrink-0" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                </svg><span>Preços justos e transparentes</span></li>
+                        </ul>
+                    </div>
+                </div><!-- Contact Form -->
+                <div class="glass-card rounded-2xl sm:rounded-3xl p-6 sm:p-8">
+                    <h3 class="font-display text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Solicite seu orçamento</h3>
+                    <form id="contact-form" class="space-y-4 sm:space-y-5">
+                        <div><label for="name" class="block text-xs sm:text-sm text-gray-400 mb-2">Nome completo</label> <input type="text" id="name" name="name" required class="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:border-white transition-colors text-sm sm:text-base" placeholder="Seu nome">
+                        </div>
+                        <div><label for="email" class="block text-xs sm:text-sm text-gray-400 mb-2">E-mail</label> <input type="email" id="email" name="email" required class="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:border-white transition-colors text-sm sm:text-base" placeholder="seu@email.com">
+                        </div>
+                        <div><label for="phone" class="block text-xs sm:text-sm text-gray-400 mb-2">WhatsApp</label> <input type="tel" id="phone" name="phone" class="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:border-white transition-colors text-sm sm:text-base" placeholder="(00) 00000-0000">
+                        </div>
+                        <div><label for="service" class="block text-xs sm:text-sm text-gray-400 mb-2">Tipo de projeto</label> <select id="service" name="service" class="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-xl bg-white/5 border border-white/20 text-white focus:outline-none focus:border-white transition-colors text-sm sm:text-base"> <option value="" class="bg-black">Selecione uma opção</option> <option value="website" class="bg-black">Website Institucional</option> <option value="sistema" class="bg-black">Sistema Web</option> <option value="ecommerce" class="bg-black">E-commerce</option> <option value="landing" class="bg-black">Landing Page</option> <option value="outro" class="bg-black">Outro</option> </select>
+                        </div>
+                        <div><label for="message" class="block text-xs sm:text-sm text-gray-400 mb-2">Mensagem</label> <textarea id="message" name="message" rows="4" class="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:border-white transition-colors resize-none text-sm sm:text-base" placeholder="Conte-nos sobre seu projeto..."></textarea>
+                        </div><button type="submit" class="bg-white hover:bg-gray-200 w-full py-3 sm:py-4 rounded-xl text-black font-semibold text-base sm:text-lg transition-all"> Enviar Mensagem </button>
+                    </form>
+                    <p id="form-success" class="hidden mt-3 sm:mt-4 text-center text-green-400 font-medium text-sm sm:text-base">✓ Mensagem enviada! Entraremos em contato em breve.</p>
+                </div>
+            </div>
+        </div>
+    </section><!-- Footer -->
+    <footer class="py-8 sm:py-12 border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6">
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-white to-gray-300 flex items-center justify-center">
+                        <svg class="w-3 h-3 sm:w-4 sm:h-4 text-black" fill="none" stroke="currentColor" viewbox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                        </svg>
+                    </div><span class="font-display font-bold text-sm sm:text-base">Labs Codexis</span>
+                </div>
+                <p class="text-gray-500 text-xs sm:text-sm text-center">© 2025 Labs Codexis. Todos os direitos reservados.</p>
+                <div class="flex items-center gap-3 sm:gap-4"><a href="https://instagram.com/labscodexis" target="_blank" rel="noopener noreferrer" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full glass-card flex items-center justify-center hover:border-white/50 transition-colors">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 hover:text-white transition-colors" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                    </svg></a> <a href="https://wa.me/5591985399924" target="_blank" rel="noopener noreferrer" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full glass-card flex items-center justify-center hover:border-white/50 transition-colors">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 hover:text-white transition-colors" fill="currentColor" viewbox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                    </svg></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+<script>
+    const defaultConfig = {
+        hero_title: 'Labs Codexis',
+        hero_subtitle: 'Desenvolvimento Web de Alto Padrão',
+        cta_button: 'Solicitar Orçamento',
+        about_title: 'Quem Somos',
+        founder_name: 'Matheus Gonçalves',
+        background_color: '#000000',
+        accent_color: '#00ff88',
+        text_color: '#f3f4f6',
+        surface_color: 'rgba(0, 255, 136, 0.03)',
+        secondary_text: '#9ca3af'
+    };
+
+    let config = { ...defaultConfig };
+
+    async function onConfigChange(newConfig) {
+        config = { ...defaultConfig, ...newConfig };
+
+        const heroTitle = document.getElementById('hero-title');
+        if (heroTitle) {
+            heroTitle.innerHTML = config.hero_title.includes('Codexis')
+                ? config.hero_title.replace('Codexis', '<span class="gradient-text">Codexis</span>')
+                : config.hero_title;
+        }
+
+        const heroSubtitle = document.getElementById('hero-subtitle');
+        if (heroSubtitle) heroSubtitle.textContent = config.hero_subtitle;
+
+        const ctaButton = document.getElementById('cta-button');
+        if (ctaButton) ctaButton.textContent = config.cta_button;
+
+        const aboutTitle = document.getElementById('about-title');
+        if (aboutTitle) {
+            aboutTitle.innerHTML = config.about_title.includes('Somos')
+                ? config.about_title.replace('Somos', '<span class="gradient-text">Somos</span>')
+                : config.about_title;
+        }
+
+        const founderName = document.getElementById('founder-name');
+        if (founderName) founderName.textContent = config.founder_name;
+    }
+
+    function mapToCapabilities(config) {
+        return {
+            recolorables: [
+                {
+                    get: () => config.background_color || defaultConfig.background_color,
+                    set: (value) => {
+                        config.background_color = value;
+                        if (window.elementSdk) window.elementSdk.setConfig({ background_color: value });
+                    }
+                },
+                {
+                    get: () => config.accent_color || defaultConfig.accent_color,
+                    set: (value) => {
+                        config.accent_color = value;
+                        if (window.elementSdk) window.elementSdk.setConfig({ accent_color: value });
+                    }
+                },
+                {
+                    get: () => config.text_color || defaultConfig.text_color,
+                    set: (value) => {
+                        config.text_color = value;
+                        if (window.elementSdk) window.elementSdk.setConfig({ text_color: value });
+                    }
+                }
+            ],
+            borderables: [],
+            fontEditable: undefined,
+            fontSizeable: undefined
+        };
+    }
+
+    function mapToEditPanelValues(config) {
+        return new Map([
+            ['hero_title', config.hero_title || defaultConfig.hero_title],
+            ['hero_subtitle', config.hero_subtitle || defaultConfig.hero_subtitle],
+            ['cta_button', config.cta_button || defaultConfig.cta_button],
+            ['about_title', config.about_title || defaultConfig.about_title],
+            ['founder_name', config.founder_name || defaultConfig.founder_name]
+        ]);
+    }
+
+    // Initialize SDK
+    if (window.elementSdk) {
+        window.elementSdk.init({
+            defaultConfig,
+            onConfigChange,
+            mapToCapabilities,
+            mapToEditPanelValues
+        });
+    }
+
+    // Form handling
+    document.getElementById('contact-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        const name = formData.get('name');
+        const phone = formData.get('phone');
+        const service = formData.get('service');
+        const message = formData.get('message');
+
+        const whatsappMessage = `Olá! Meu nome é ${name}.%0A%0A*Tipo de projeto:* ${service || 'Não especificado'}%0A%0A*Mensagem:* ${message || 'Gostaria de saber mais sobre os serviços.'}`;
+
+        window.open(`https://wa.me/5591985399924?text=${whatsappMessage}`, '_blank');
+
+        document.getElementById('form-success').classList.remove('hidden');
+        this.reset();
+
+        setTimeout(() => {
+            document.getElementById('form-success').classList.add('hidden');
+        }, 5000);
     });
 
-    // Smooth scrolling for anchor links
+    // Smooth scroll
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
+        anchor.addEventListener('click', function(e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
-                const navbarHeight = document.querySelector('.navbar').offsetHeight;
-                const targetPosition = target.offsetTop - navbarHeight;
-
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
-
-                // Close mobile menu if open
-                const navbarCollapse = document.querySelector('.navbar-collapse');
-                if (navbarCollapse.classList.contains('show')) {
-                    const bsCollapse = new bootstrap.Collapse(navbarCollapse);
-                    bsCollapse.hide();
-                }
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         });
     });
 
-    // Intersection Observer for animations
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, observerOptions);
-
-    // Observe all animated elements
-    document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .scale-in').forEach(el => {
-        observer.observe(el);
-    });
-
-    // WhatsApp Integration
-    function openWhatsApp(message) {
-        const phoneNumber = '5591984569545';
-        const encodedMessage = encodeURIComponent(message);
-        window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank', 'noopener,noreferrer');
-    }
-
-    // Instagram Integration
-    function openInstagram() {
-        window.open('https://instagram.com/labscodexis', '_blank', 'noopener,noreferrer');
-    }
-
-    // Email Integration
-    function openLinkedIn() {
-        const linkedInUrl = 'https://www.linkedin.com/company/labscodexis-oficial';
-        window.open(linkedInUrl, '_blank');
-    }
-
-
-    function openLi() {
-        const subject = encodeURIComponent('Contato através do site - Labs Codexis');
-        const body = encodeURIComponent('Olá! Vim através do site da Labs Codexis e gostaria de mais informações sobre desenvolvimento web.\n\nAguardo retorno.\n\nObrigado!');
-        window.open(`mailto:contato@labscodexis.com?subject=${subject}&body=${body}`, '_blank');
-    }
-
-    // Prevent default on service card clicks for better UX
-    document.querySelectorAll('.service-card .btn-service').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
-    });
-
-    // Prevent default on portfolio overlay clicks
-    document.querySelectorAll('.portfolio-overlay .btn-primary-custom').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
-    });
-
-    // Add ripple effect to buttons
-    document.querySelectorAll('.btn-primary-custom, .btn-outline-custom, .btn-neon, .contact-btn, .btn-service').forEach(button => {
-        button.addEventListener('click', function(e) {
-            const ripple = document.createElement('span');
-            const rect = this.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height);
-            const x = e.clientX - rect.left - size / 2;
-            const y = e.clientY - rect.top - size / 2;
-
-            ripple.style.width = ripple.style.height = size + 'px';
-            ripple.style.left = x + 'px';
-            ripple.style.top = y + 'px';
-            ripple.classList.add('ripple');
-
-            this.appendChild(ripple);
-
-            setTimeout(() => {
-                ripple.remove();
-            }, 600);
-        });
-    });
-
-    // Parallax effect for floating elements
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        const parallaxElements = document.querySelectorAll('.floating-element');
-
-        parallaxElements.forEach((element, index) => {
-            const speed = 0.5 + (index * 0.1);
-            element.style.transform = `translateY(${scrolled * speed}px)`;
-        });
-    });
-
-    // Initialize loading animations
-    document.addEventListener('DOMContentLoaded', () => {
-        // Remove loading class after a short delay
-        setTimeout(() => {
-            document.querySelectorAll('.loading').forEach(el => {
-                el.classList.remove('loading');
-            });
-        }, 500);
-
-        // Trigger initial animations for elements in viewport
-        const initialElements = document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .scale-in');
-        initialElements.forEach(el => {
-            const rect = el.getBoundingClientRect();
-            if (rect.top < window.innerHeight && rect.bottom > 0) {
-                el.classList.add('visible');
-            }
-        });
-    });
-
-    // Performance optimization: Throttle scroll events
-    let ticking = false;
-    function updateOnScroll() {
-        // Scroll-based animations here
-        ticking = false;
-    }
-
-    window.addEventListener('scroll', () => {
-        if (!ticking) {
-            requestAnimationFrame(updateOnScroll);
-            ticking = true;
-        }
-    });
-
-    // Add hover effects for service cards
-    document.querySelectorAll('.service-card').forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-15px) scale(1.02)';
-        });
-
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) scale(1)';
-        });
-    });
-
-    // Add hover effects for portfolio items
-    document.querySelectorAll('.portfolio-item').forEach(item => {
-        item.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-10px) scale(1.02)';
-        });
-
-        item.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) scale(1)';
-        });
-    });
-
-    // Navbar brand animation on hover
-    document.querySelector('.navbar-brand').addEventListener('mouseenter', function() {
-        this.querySelector('.highlight').style.animation = 'neonPulse 0.5s ease-in-out infinite alternate';
-    });
-
-    document.querySelector('.navbar-brand').addEventListener('mouseleave', function() {
-        this.querySelector('.highlight').style.animation = 'neonPulse 2s ease-in-out infinite alternate';
-    });
-
-    // Add typing effect to hero title (optional enhancement)
-    function typeWriter(element, text, speed = 100) {
-        let i = 0;
-        element.innerHTML = '';
-
-        function type() {
-            if (i < text.length) {
-                element.innerHTML += text.charAt(i);
-                i++;
-                setTimeout(type, speed);
-            }
-        }
-
-        type();
-    }
-
-    // Uncomment to enable typing effect
-    // setTimeout(() => {
-    //     const heroTitle = document.querySelector('.hero-title');
-    //     const originalText = heroTitle.textContent;
-    //     typeWriter(heroTitle, originalText, 50);
-    // }, 1000);
+    // Initial render
+    onConfigChange(config);
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98f1f1f61775877d',t:'MTc2MDU1ODg3Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c0c61a1f0854f82',t:'MTc2ODg4OTEzOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
